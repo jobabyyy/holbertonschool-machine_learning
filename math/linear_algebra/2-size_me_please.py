@@ -3,6 +3,7 @@
 
 
 def matrix_shape(matrix):
+    """shape for matrix"""
     shape = []
     while isinstance(matrix, list):
         shape.append(len(matrix))  # Add len of latest dimension 2 shape list
