@@ -3,6 +3,7 @@
 
 
 def mat_mul(mat1, mat2):
+    """multiplying"""
     rows_mat1 = len(mat1)
     cols_mat1 = len(mat1[0])
     rows_mat2 = len(mat2)
