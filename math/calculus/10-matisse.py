@@ -3,10 +3,21 @@
 
 
 def poly_derivative(poly):
-    """poly is a list of coefficients"""
-    if not isinstance(poly, list) or not all(isinstance(coef, (int, float)) for coef in poly):
+    # check if poly is a list
+    if not isinstance(poly, list):
         return None
+
+    # check if all elements in poly are numbers
+    if not all(isinstance(coef, (int, float)) for coef in poly):
+        return None
+
+    # if poly represents a constant function, its derivative is 0
     if len(poly) == 1:
         return [0]
-    derivative = [poly[i] * i for i in range(1, len(poly))]
+
+    # calculate the derivative
+    derivative = []
+    for i in range(1, len(poly)):
+        derivative.append(poly[i] * i)
+
     return derivative
