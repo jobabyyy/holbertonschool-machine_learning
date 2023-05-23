@@ -3,6 +3,7 @@
 
 
 class Normal:
+    """normal distribution"""
     def __init__(self, data=None, mean=0., stddev=1.):
         """Initialize a Normal distribution."""
         if data is None:
