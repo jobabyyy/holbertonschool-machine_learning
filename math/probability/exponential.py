@@ -22,3 +22,10 @@ class Exponential:
         num_points = len(data)
         total = sum(data)
         return float(num_points) / total
+
+    def pdf(self, x):
+        """calc the value of PDF at given time"""
+        if x < 0:
+            return 0
+        else:
+            return self.lambtha * 2.7182818285 ** (-self.lambtha * x)
