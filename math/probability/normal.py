@@ -33,3 +33,9 @@ class Normal:
     def x_value(self, z):
         """calc x value of given z-score"""
         return z * self.stddev + self.mean
+
+    def pdf(self, x):
+        """calc val of given x value"""
+        exponent = -0.5 * ((x - self.mean) / self.stddev) ** 2
+        denominator = self.stddev * (2.50662827463)
+        return (1 / denominator) * (2.718281828459045) ** exponent
