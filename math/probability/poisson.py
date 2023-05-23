@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Class to represent a Poisson distribution"""
 
-import math
-
 
 class Poisson:
-    """Expecting a certain number of occurrences"""
-
+    """expected num of occurences given frame"""
     def __init__(self, data=None, lambtha=1.):
         if data is None:
             if lambtha <= 0:
@@ -20,7 +17,6 @@ class Poisson:
             self.lambtha = self.calculate_lambtha(data)
 
     def calculate_lambtha(self, data):
-        """Calculating lambtha"""
         total = sum(data)
         num_points = len(data)
         return float(total) / num_points
@@ -30,15 +26,11 @@ class Poisson:
         if k < 0:
             return 0
         else:
-            return (
-                (self.lambtha ** k) *
-                math.exp(-self.lambtha) /
-                self.factorial(k)
-            )
+            return self._calculate_pmf(k)
 
-    @staticmethod
-    def factorial(n):
-        result = 1
-        for i in range(1, n + 1):
-            result *= i
+    def _calculate_pmf(self, k):
+        result = 1.0
+        for i in range(1, k + 1):
+            result *= self.lambtha / i
+        result *= 2.71828 ** -self.lambtha
         return result
