@@ -45,7 +45,7 @@ class Poisson:
             return 0
         else:
             return self.calculate_cdf(k)
-        
+
     def calculate_cdf(self, k):
         """method"""
         cdf = 0
