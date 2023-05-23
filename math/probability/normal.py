@@ -25,3 +25,11 @@ class Normal:
         deviation = [(x - mean) ** 2 for x in data]
         stddev = (sum(deviation) / num_points) ** 0.5
         return mean, stddev
+
+    def z_score(self, x):
+        """calc z score"""
+        return (x - self.mean) / self.stddev
+    
+    def x_value(self, z):
+        """calc x value of given z-score"""
+        return z * self.stddev + self.mean
