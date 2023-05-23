@@ -35,5 +35,5 @@ class Poisson:
         factorial = 1
         for i in range(1, k + 1):
             factorial *= i
-        pmf = (self.lambtha ** k) * ( 2.7182818285 ** -self.lambtha) / factorial
+        pmf = (self.lambtha ** k) * (2.7182818285 ** -self.lambtha) / factorial
         return pmf
