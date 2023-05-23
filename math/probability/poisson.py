@@ -3,10 +3,11 @@
 
 
 class Poisson:
+    """expecting certain num of occurences"""
     def __init__(self, data=None, lambtha=1.):
         if data is None:
             if lambtha <= 0:
-                raise ValueError("lambtha must be positive value")
+                raise ValueError("lambtha must be a positive value")
             self.lambtha = float(lambtha)
         else:
             if not isinstance(data, list):
@@ -16,6 +17,7 @@ class Poisson:
             self.lambtha = self.calculate_lambtha(data)
 
     def calculate_lambtha(self, data):
+        """calculating lambtha"""
         total = sum(data)
         num_points = len(data)
         return float(total) / num_points
