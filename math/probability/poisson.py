@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Class to represent a Poisson distribution"""
 
+
 class Poisson:
+    """expecting certain num of occurences"""
     def __init__(self, data=None, lambtha=1.):
         if data is None:
             if lambtha <= 0:
@@ -15,22 +17,23 @@ class Poisson:
             self.lambtha = self.calculate_lambtha(data)
 
     def calculate_lambtha(self, data):
+        """calc lambtha"""
         total = sum(data)
         num_points = len(data)
         return float(total) / num_points
 
     def pmf(self, k):
+        """calc val of the PMF"""
         k = int(k)
-        if not isinstance(k, int):
-            raise TypeError("k must be an integer")
         if k < 0:
             return 0
         else:
-            return self._calculate_pmf(k)
+            return self.calculate_pmf(k)
 
-    def _calculate_pmf(self, k):
+    def calculate_pmf(self, k):
+        """calc val of PMF"""
         factorial = 1
         for i in range(1, k + 1):
             factorial *= i
         pmf = (self.lambtha ** k) * (2.71828 ** -self.lambtha) / factorial
-        return round(pmf, 14)
+        return pmf
