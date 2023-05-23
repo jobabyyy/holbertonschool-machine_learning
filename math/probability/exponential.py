@@ -3,6 +3,7 @@
 
 
 class Exponential:
+    """comment"""
     def __init__(self, data=None, lambtha=1.):
         """initialize an expo distribution"""
         if data is None:
