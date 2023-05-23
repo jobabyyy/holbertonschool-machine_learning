@@ -39,3 +39,15 @@ class Normal:
         exponent = -0.5 * ((x - self.mean) / self.stddev) ** 2
         denominator = self.stddev * (2.50662827463)
         return (1 / denominator) * (2.718281828459045) ** exponent
+
+    def cdf(self, x):
+        """calc cdf"""
+        z = self.z_score(x)
+        return (1 + self.approx_erf(z / (2 ** 0.5))) / 2
+
+    def _approx_erf(self, x):
+        """appro the error func"""
+        a1 =  0.254829592
+        a2 = -0.284496736
+        a3 =  1.421413741
+        a4 = -1.453152027
