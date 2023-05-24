@@ -22,3 +22,26 @@ class Binomial:
             self.p = 1 - (vary / mean)
             self.n = round((sum(data) / self.p) / len(data))
             self.p = float(mean / self.n)
+
+    def factorial(self, k):
+        """Calculates the factorial of k."""
+        fact = 1
+        for i in range(1, int(k) + 1):
+            fact *= i
+        return fact
+
+    def pmf(self, k):
+        """Calculates the value of the PMF for a given number of successes."""
+        k = int(k)
+        if k < 0 or k > self.n:
+            return 0
+        else:
+            binomial_coefficient = (
+                self.factorial(self.n) /
+                (self.factorial(k) * self.factorial(self.n - k))
+            )
+            return (
+                binomial_coefficient *
+                (self.p ** k) *
+                ((1 - self.p) ** (self.n - k))
+            )
