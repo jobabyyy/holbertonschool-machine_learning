@@ -33,31 +33,19 @@ class Normal:
     def x_value(self, z):
         """Calculate the x value of a given z-score"""
         return z * self.stddev + self.mean
-
+    
     def pdf(self, x):
-        """Calc val of the probability density function at x value"""
-        exponent = -0.5 * ((x - self.mean) / self.stddev) ** 2
-        denominator = self.stddev * (2.50662827463)
-        return (1 / denominator) * (2.718281828459045) ** exponent
+        """Calculates value of PDF for given x-value"""
+        coefficient = 1 / (self.stddev * (2 * 3.1415926536) ** 0.5)
+        exponent = -((x - self.mean) ** 2) / (2 * self.stddev ** 2)
+        return coefficient * (2.7182818285 ** exponent)
 
     def cdf(self, x):
-        """Calculate the cumulative distribution function"""
+        """Calculates value of CDF for given x-value"""
         z = self.z_score(x)
-        return (1 + self._approx_erf(z / (2 ** 0.5))) / 2
+        return 0.5 * (1 + self.errorf_approx(z / 2 ** 0.5))
 
-    def _approx_erf(self, x):
-        """Approximation of the error function"""
-        a1 = 0.254829592
-        a2 = -0.284496736
-        a3 = 1.421413741
-        a4 = -1.453152027
-        a5 = 1.061405429
-        p = 0.3275911
-
-        sign = 1 if x >= 0 else -1
-        x = abs(x)
-
-        t = 1.0 / (1.0 + p * x)
-        y = (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t
-
-        return sign * (1 - y * 2 ** (-1 * x * x))
+    def errorf_approx(self, x):
+        """Approximates error function"""
+        pi = 3.1415926536
+        return (2/(pi**.5))*(x-(x**3)/3 + (x**5)/10 - (x**7)/42 + (x**9)/216)
