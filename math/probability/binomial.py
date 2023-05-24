@@ -45,6 +45,7 @@ class Binomial:
                 (self.p ** k) *
                 ((1 - self.p) ** (self.n - k))
             )
+
     def cdf(self, k):
         """Calculates the value of the CDF for a given number of successes."""
         k = int(k)
