@@ -17,6 +17,8 @@ class Binomial:
                 raise TypeError("data must be a list")
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
-            self.p = sum(data)/len(data)
-            self.n = round(sum(data)/self.p)
-            self.p = sum(data)/self.n
+            # Assuming that all values in the data are equal to the number of successes,
+            # we can find n by taking the maximum value in the data.
+            self.n = max(data)
+            # And p is the mean of the data divided by n.
+            self.p = sum(data) / (self.n * len(data))
