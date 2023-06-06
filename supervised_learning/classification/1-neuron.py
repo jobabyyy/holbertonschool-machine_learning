@@ -3,23 +3,27 @@
 
 import numpy as np
 
-
 class Neuron:
-    """def a single neuron"""
+    """Class that defines a single neuron"""
     def __init__(self, nx):
-        """init self & nx"""
+        """init a single neuron"""
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
-            raise ValueError("nx must be a positive integer")
+            raise ValueError("nx must be positive")
 
-        self.W = np.random.normal(size=(1, nx))
-        self.b = 0
-        self.A = 0
+        self.__W = np.random.normal(size=(1, nx))
+        self.__b = 0
+        self.__A = 0
 
+    @property
+    def W(self):
+        return self.__W
 
-    def forward_prop(self, X):
-        """Calculate forward propagation"""
-        Z = np.matmul(self.W, X) + self.b
-        self.A = 1 / (1 + np.exp(-Z))
-        return self.A
+    @property
+    def b(self):
+        return self.__b
+
+    @property
+    def A(self):
+        return self.__A
