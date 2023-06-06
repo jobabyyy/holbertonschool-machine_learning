@@ -7,7 +7,7 @@ import numpy as np
 class Neuron:
     """def a single neuron"""
     def __init__(self, nx):
-        """def self & nx"""
+        """init self & nx"""
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
