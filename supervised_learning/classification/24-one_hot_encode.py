@@ -3,7 +3,9 @@
 
 import numpy as np
 
+
 def one_hot_encode(Y, classes):
+    """init y, classes"""
     try:
         m = Y.shape[0]
         one_hot = np.zeros((classes, m))
