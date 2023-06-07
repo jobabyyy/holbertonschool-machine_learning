@@ -58,6 +58,7 @@ class NeuralNetwork:
         return self.__A1, self.__A2
 
     def cost(self, Y, A):
+        """calc cost of model"""
         m = Y.shape[1]
         term1 = Y * np.log(A)
         term2 = (1 - Y) * np.log(1.0000001 - A)
