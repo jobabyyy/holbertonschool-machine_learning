@@ -7,27 +7,22 @@ import numpy as np
 class DeepNeuralNetwork:
     """Defines deep neural network"""
     def __init__(self, nx, layers):
-        """Init self, nx and layers"""
-        if type(nx) is not int:
+        if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
-        if type(layers) is not list or len(layers) == 0:
+        if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if min(layers) <= 0:
+        if not all(map(lambda x: isinstance(x, int) and x > 0, layers)):
             raise TypeError("layers must be a list of positive integers")
-
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = {}
-
-        for lix, layer_size in enumerate(layers, 1):
-            if type(layer_size) is not int:
-                raise TypeError("layers must be a list of positive integers")
-            w = np.random.randn(layer_size, nx) * np.sqrt(2/nx)
-            self.__weights["W{}".format(lix)] = w
-            self.__weights["b{}".format(lix)] = np.zeros((layer_size, 1))
-            nx = layer_size
+        for i in range(self.__L):
+            self.__weights['W' + str(i+1)] = np.random.randn(
+                layers[i], nx) * np.sqrt(2/nx)
+            self.__weights['b' + str(i+1)] = np.zeros((layers[i], 1))
+            nx = layers[i]
 
     @property
     def L(self):
@@ -42,26 +37,19 @@ class DeepNeuralNetwork:
         return self.__weights
 
     def forward_prop(self, X):
-        """calc prop of neural num"""
-        self.__cache["A0"] = X
-
-        for lay in range(1, self.__L + 1):
-            A_prev = self.__cache["A{}".format(lay - 1)]
-            Wl = self.__weights["W{}".format(lay)]
-            bl = self.__weights["b{}".format(lay)]
-            Zl = np.dot(Wl, A_prev) + bl
-            Al = 1 / (1 + np.exp(-Zl))
-            self.__cache["A{}".format(lay)] = Al
-
-        return self.__cache["A{}".format(self.__L)], self.__cache
+        """Forward Propagation"""
+        self.__cache['A0'] = X
+        for i in range(1, self.__L + 1):
+            Zi = np.dot(self.__weights['W' + str(i)],
+                        self.__cache['A' + str(i - 1)]) +\
+                        self.__weights['b' + str(i)]
+            self.__cache['A' + str(i)] = self.sigmoid(Zi)
+        return self.__cache['A' + str(self.__L)], self.__cache
 
     def cost(self, Y, A):
-        """Calculate cost of the model using logistic regression"""
-        m = np.shape(Y)[1]
-        loss_Y = np.multiply(Y, np.log(A))
-        loss_NY = np.multiply((1 - Y), np.log(1.0000001 - A))
-        total_loss = loss_Y + loss_NY
-        cost = -np.sum(total_loss) / m
+        """Cost Function"""
+        m = Y.shape[1]
+        cost = -1 / m * np.sum(Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A))
         return cost
 
     def evaluate(self, X, Y):
@@ -74,19 +62,27 @@ class DeepNeuralNetwork:
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculate one pass of gradient descent on the neural network"""
         m = Y.shape[1]
-        dZ = cache["A{}".format(self.__L)] - Y
+        for i in reversed(range(1, self.__L + 1)):
+            A = cache['A' + str(i)]
+            A_prev = cache['A' + str(i - 1)]
+            W = self.__weights['W' + str(i)]
+            if i == self.__L:
+                dz = A - Y
+            else:
+                dz = da * self.sigmoid_derivative(A)
+            dw = np.dot(dz, A_prev.T) / m
+            db = np.sum(dz, axis=1, keepdims=True) / m
+            if i > 1:
+                da = np.dot(W.T, dz)
+            self.__weights['W' + str(i)] -= alpha * dw
+            self.__weights['b' + str(i)] -= alpha * db
 
-        for icl in range(self.__L, 0, -1):
-            A_prev = cache["A{}".format(icl - 1)]
-            dW = (1/m) * np.dot(dZ, A_prev.T)
-            db = (1/m) * np.sum(dZ, axis=1, keepdims=True)
+    @staticmethod
+    def sigmoid(Z):
+        """activation"""
+        return 1 / (1 + np.exp(-Z))
 
-            self.__weights["W{}".format(icl)] -= alpha * dW
-            self.__weights["b{}".format(icl)] -= alpha * db
-
-            if icl > 1:
-                dA = np.dot(self.__weights["W{}".format(icl)].T, dZ)
-                dZ = dA * (A_prev * (1 - A_prev))
-
-        self.__weights["W{}".format(icl)] -= alpha * dW
-        self.__weights["b{}".format(icl)] -= alpha * db
+    @staticmethod
+    def sigmoid_derivative(A):
+        """derivative"""
+        return A * (1 - A)
