@@ -41,17 +41,16 @@ class DeepNeuralNetwork:
     def weights(self):
         return self.__weights
 
+    def forward_prop(self, X):
+        """calc prop of neural num"""
+        self.__cache["A0"] = X
 
-def forward_prop(self, X):
-    """calc prop of neural num"""
-    self.__cache["A0"] = X
-
-    for lay in range(1, self.__L + 1):
-        A_prev = self.__cache["A{}".format(lay - 1)]
-        Wl = self.__weights["W{}".format(lay)]
-        bl = self.__weights["b{}".format(lay)]
-        Zl = np.dot(Wl, A_prev) + bl
-        Al = 1 / (1 + np.exp(-Zl))
-        self.__cache["A{}".format(lay)] = Al
+        for lay in range(1, self.__L + 1):
+            A_prev = self.__cache["A{}".format(lay - 1)]
+            Wl = self.__weights["W{}".format(lay)]
+            bl = self.__weights["b{}".format(lay)]
+            Zl = np.dot(Wl, A_prev) + bl
+            Al = 1 / (1 + np.exp(-Zl))
+            self.__cache["A{}".format(lay)] = Al
 
         return self.__cache["A{}".format(self.__L)], self.__cache
