@@ -5,9 +5,9 @@ import numpy as np
 
 
 class DeepNeuralNetwork:
-    """Deep Neural network performing binary classification"""
+    """Defines deep neural network"""
     def __init__(self, nx, layers):
-        """Init self, nx, and layers"""
+        """Init self, nx and layers"""
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
@@ -17,9 +17,9 @@ class DeepNeuralNetwork:
         if min(layers) <= 0:
             raise TypeError("layers must be a list of positive integers")
 
-        self.L = len(layers)
-        self.cache = {}
-        self.weights = {}
+        self.__L = len(layers)
+        self.__cache = {}
+        self.__weights = {}
 
         for lix, layer_size in enumerate(layers, 1):
             if type(layer_size) is not int:
