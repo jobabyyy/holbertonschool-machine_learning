@@ -64,7 +64,7 @@ class NeuralNetwork:
         term2 = (1 - Y) * np.log(1.0000001 - A)
         cost = (-1 / m) * np.sum(term1 + term2)
         return cost
-    
+
     def evaluate(self, X, Y):
         """prediciton inputs"""
         _, A2 = self.forward_prop(X)
