@@ -5,9 +5,9 @@ import numpy as np
 
 
 def one_hot_decode(one_hot):
-    """finding the index"""
+    """coverts into vector of labels"""
     try:
-        labels = np.argmax(one_hot, axis=0)
+        labels = np.argmax(one_hot.T, axis=1)
         return labels
     except Exception:
         return None
