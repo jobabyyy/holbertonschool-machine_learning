@@ -80,6 +80,10 @@ class DeepNeuralNetwork:
             A_prev = cache["A{}".format(icl - 1)]
             dW = (1/m) * np.dot(dZ, A_prev.T)
             db = (1/m) * np.sum(dZ, axis=1, keepdims=True)
+
+            self.__weights["W{}".format(icl)] -= alpha * dW
+            self.__weights["b{}".format(icl)] -= alpha * db
+
             if icl > 1:
                 dA = np.dot(self.__weights["W{}".format(icl)].T, dZ)
                 dZ = dA * (A_prev * (1 - A_prev))
