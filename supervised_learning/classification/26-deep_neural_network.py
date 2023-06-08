@@ -104,8 +104,7 @@ class DeepNeuralNetwork:
         if not isinstance(step, int):
             raise TypeError("step must be an integer")
         if step <= 0 or step > iterations:
-            raise ValueError
-        ("step must be a positive integer and <= iterations")
+            raise ValueError("step must be a positive and <= iterations")
 
         # Forward propagation, cost calculation, and back propagation in a loop
         cost_values = []
