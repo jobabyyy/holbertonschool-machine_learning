@@ -98,7 +98,7 @@ class DeepNeuralNetwork:
                 raise ValueError("step must be positive and <= iterations")
         costs = []
         steps = []
-        for i in range(iterations + 1):
+        for i in range(iterations):
             A, cache = self.forward_prop(X)
             cost = self.cost(Y, A)
             if i % step == 0 or i == iterations:
