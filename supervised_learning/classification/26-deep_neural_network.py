@@ -105,7 +105,6 @@ class DeepNeuralNetwork:
                 if verbose:
                     print("Cost after {} iterations: {}".format(i, cost))
                 costs.append(cost)
-                steps.append(i)
             self.gradient_descent(Y, cache, alpha)
         if graph:
             plt.plot(steps, costs)
@@ -114,7 +113,7 @@ class DeepNeuralNetwork:
             plt.title('Training Cost')
             plt.show()
         return self.evaluate(X, Y)
- 
+
     @staticmethod
     def sigmoid(Z):
         """Sigmoid Activation"""
@@ -124,7 +123,7 @@ class DeepNeuralNetwork:
     def sigmoid_derivative(A):
         """Sigmoid Derivative"""
         return A * (1 - A)
-    
+
     def save(self, filename):
         """Saves the instance object to a file in pickle format"""
         if not filename.endswith('.pkl'):
