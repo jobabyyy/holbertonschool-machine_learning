@@ -136,15 +136,23 @@ class DeepNeuralNetwork:
         if not filename.endswith('.pkl'):
             filename += '.pkl'
         with open(filename, 'wb') as file:
-            pickle.dump(self.__dict__, file)
+            pickle.dump(self, file)
 
     @staticmethod
     def load(filename):
         """Loads a pickled DeepNeuralNetwork object"""
         try:
             with open(filename, 'rb') as file:
-                obj = DeepNeuralNetwork.__new__(DeepNeuralNetwork)
-                obj.__dict__ = pickle.load(file)
-                return obj
+                return pickle.load(file)
         except FileNotFoundError:
             return None
+
+    @staticmethod
+    def sigmoid(Z):
+        """Sigmoid Activation"""
+        return 1 / (1 + np.exp(-Z))
+
+    @staticmethod
+    def sigmoid_derivative(A):
+        """Sigmoid Derivative"""
+        return A * (1 - A)
