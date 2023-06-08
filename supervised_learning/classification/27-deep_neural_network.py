@@ -3,7 +3,6 @@
 
 import numpy as np
 import pickle
-import matplotlib.pyplot as plt
 
 
 class DeepNeuralNetwork:
@@ -146,3 +145,19 @@ class DeepNeuralNetwork:
                 return pickle.load(file)
         except FileNotFoundError:
             return None
+
+    @staticmethod
+    def sigmoid(Z):
+        """Sigmoid Activation"""
+        return 1 / (1 + np.exp(-Z))
+
+    @staticmethod
+    def sigmoid_derivative(A):
+        """Sigmoid Derivative"""
+        return A * (1 - A)
+
+    @staticmethod
+    def softmax(Z):
+        """Softmax activation function for multiclass classification"""
+        exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
+        return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
