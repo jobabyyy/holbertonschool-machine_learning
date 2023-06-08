@@ -103,12 +103,12 @@ class DeepNeuralNetwork:
             raise ValueError("alpha must be positive")
         if not isinstance(step, int):
             raise TypeError("step must be an integer")
-        if step <= 0 or step > iterations:
-            raise ValueError("step must be a positive and <= iterations")
+        if step <= 0 or step > iterations 
+            raise ValueError("step must be positive and <= iterations")
 
         # Forward propagation, cost calculation, and back propagation in a loop
         cost_values = []
-        for iteration in range(iterations + 1):
+        for iteration in range(iterations):
             A, cache = self.forward_prop(X)
             cost = self.cost(Y, A)
             if verbose and iteration % step == 0:
