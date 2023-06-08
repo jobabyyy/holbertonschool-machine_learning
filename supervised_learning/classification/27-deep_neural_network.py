@@ -105,10 +105,8 @@ class DeepNeuralNetwork:
             raise TypeError("step must be an integer")
         if step <= 0 or step > iterations 
             raise ValueError("step must be positive and <= iterations")
-
-        # Forward propagation, cost calculation, and back propagation in a loop
         cost_values = []
-        for iteration in range(iterations):
+        for i in range(iterations):
             A, cache = self.forward_prop(X)
             cost = self.cost(Y, A)
             if verbose and iteration % step == 0:
@@ -116,9 +114,7 @@ class DeepNeuralNetwork:
             if graph and iteration % step == 0:
                 cost_values.append(cost)
 
-            self.gradient_descent(Y, cache, alpha)
-
-        # Plot the training cost graph if graph=True
+            self.gradient_descent(Y, cache, alpha):
         if graph:
             import matplotlib.pyplot as plt
             plt.plot(range(0, iterations + 1, step), cost_values, 'b-')
