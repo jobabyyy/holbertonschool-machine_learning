@@ -122,8 +122,8 @@ class DeepNeuralNetwork:
         if graph:
             import matplotlib.pyplot as plt
             plt.plot(range(0, iterations + 1, step), cost_values, 'b-')
-            plt.xlabel('Iteration')
-            plt.ylabel('Cost')
+            plt.xlabel('iteration')
+            plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
 
