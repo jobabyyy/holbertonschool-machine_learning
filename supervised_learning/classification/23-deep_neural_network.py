@@ -90,21 +90,19 @@ class DeepNeuralNetwork:
     def train(self, X, Y, iterations=5000,
               alpha=0.05, verbose=True, graph=True, step=100):
         """Trains the deep neural network by updating the weights and cache"""
-        # Checking the types and values of iterations, alpha, and step
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
-        if iterations <= 0:
+        if iterations < 1:
             raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
-        if alpha <= 0:
+        if alpha < 0:
             raise ValueError("alpha must be positive")
-        if not isinstance(step, int):
-            raise TypeError("step must be an integer")
-        if step <= 0 or step > iterations:
-            raise ValueError("step must be a positive and <= iterations")
-
-        # Forward propagation, cost calculation, and back propagation in a loop
+        if verbose is True or graph is True:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
         cost_values = []
         for iteration in range(iterations + 1):
             A, cache = self.forward_prop(X)
