@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 
 class DeepNeuralNetwork:
     """Defines deep neural network"""
+
     def __init__(self, nx, layers):
         if not isinstance(nx, int):
             raise TypeError("nx must be an integer")
@@ -21,9 +22,9 @@ class DeepNeuralNetwork:
         self.__cache = {}
         self.__weights = {}
         for i in range(self.__L):
-            self.__weights['W' + str(i+1)] = np.random.randn(
-                layers[i], nx) * np.sqrt(2/nx)
-            self.__weights['b' + str(i+1)] = np.zeros((layers[i], 1))
+            self.__weights['W' + str(i + 1)] = np.random.randn(
+                layers[i], nx) * np.sqrt(2 / nx)
+            self.__weights['b' + str(i + 1)] = np.zeros((layers[i], 1))
             nx = layers[i]
 
     @property
@@ -44,7 +45,7 @@ class DeepNeuralNetwork:
         for i in range(1, self.__L + 1):
             Zi = np.dot(self.__weights['W' + str(i)],
                         self.__cache['A' + str(i - 1)]) +\
-                        self.__weights['b' + str(i)]
+                self.__weights['b' + str(i)]
             self.__cache['A' + str(i)] = self.sigmoid(Zi)
         return self.__cache['A' + str(self.__L)], self.__cache
 
@@ -81,12 +82,12 @@ class DeepNeuralNetwork:
 
     @staticmethod
     def sigmoid(Z):
-        """activation"""
+        """Activation function"""
         return 1 / (1 + np.exp(-Z))
 
     @staticmethod
     def sigmoid_derivative(A):
-        """derivative of sigmoid"""
+        """Derivative of sigmoid"""
         return A * (1 - A)
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
@@ -142,3 +143,4 @@ class DeepNeuralNetwork:
             return obj
         except FileNotFoundError:
             raise FileNotFoundError("No file found with the name {}".format(filename))
+
