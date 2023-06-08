@@ -134,13 +134,13 @@ class DeepNeuralNetwork:
 
     @staticmethod
     def load(filename):
-        """Loads a pickled DeepNeuralNetwork object"""
+        '''Loads pickled DNN obj'''
         try:
-            with open(filename, 'rb') as file:
+            with open(filename, "rb") as file:
                 obj = pickle.load(file)
-            if not isinstance(obj, DeepNeuralNetwork):
-                raise TypeError("file doesn't contain a DeepNeuralNetwork")
-            return obj
+                if isinstance(obj, DeepNeuralNetwork):
+                    return obj
+                else:
+                    return None
         except FileNotFoundError:
-            raise FileNotFoundError("No file found with the name {}".format(filename))
-
+            return None
