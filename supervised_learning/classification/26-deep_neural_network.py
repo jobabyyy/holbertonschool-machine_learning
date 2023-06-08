@@ -114,7 +114,17 @@ class DeepNeuralNetwork:
             plt.title('Training Cost')
             plt.show()
         return self.evaluate(X, Y)
+ 
+    @staticmethod
+    def sigmoid(Z):
+        """Sigmoid Activation"""
+        return 1 / (1 + np.exp(-Z))
 
+    @staticmethod
+    def sigmoid_derivative(A):
+        """Sigmoid Derivative"""
+        return A * (1 - A)
+    
     def save(self, filename):
         """Saves the instance object to a file in pickle format"""
         if not filename.endswith('.pkl'):
