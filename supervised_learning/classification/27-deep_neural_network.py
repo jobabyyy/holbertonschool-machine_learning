@@ -3,6 +3,7 @@
 
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
 
 
 class DeepNeuralNetwork:
@@ -103,8 +104,7 @@ class DeepNeuralNetwork:
         if not isinstance(step, int):
             raise TypeError("step must be an integer")
         if step <= 0 or step > iterations:
-            raise ValueError
-        ("step must be a positive integer and <= iterations")
+            raise ValueError("step must be a positive and <= iterations")
 
         # Forward propagation, cost calculation, and back propagation in a loop
         cost_values = []
@@ -127,7 +127,6 @@ class DeepNeuralNetwork:
             plt.title('Training Cost')
             plt.show()
 
-        # Return evaluation of the training data after iterations
         return self.evaluate(X, Y)
 
     def save(self, filename):
@@ -155,9 +154,3 @@ class DeepNeuralNetwork:
     def sigmoid_derivative(A):
         """Sigmoid Derivative"""
         return A * (1 - A)
-
-    @staticmethod
-    def softmax(Z):
-        """Softmax activation function for multiclass classification"""
-        exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
-        return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
