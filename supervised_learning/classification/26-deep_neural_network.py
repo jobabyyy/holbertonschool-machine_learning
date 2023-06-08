@@ -80,16 +80,6 @@ class DeepNeuralNetwork:
             self.__weights['W' + str(i)] -= alpha * dw
             self.__weights['b' + str(i)] -= alpha * db
 
-    @staticmethod
-    def sigmoid(Z):
-        """Activation function"""
-        return 1 / (1 + np.exp(-Z))
-
-    @staticmethod
-    def sigmoid_derivative(A):
-        """Derivative of sigmoid"""
-        return A * (1 - A)
-
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
         """Trains the deep neural network"""
