@@ -86,47 +86,42 @@ class DeepNeuralNetwork:
 
     @staticmethod
     def sigmoid_derivative(A):
-        """derivative"""
+        """derivative of sigmoid"""
         return A * (1 - A)
 
-    def train(self, X, Y, iterations=5000,
-              alpha=0.05, verbose=True, graph=True, step=100):
-        """Trains the deep neural network by updating the weights and cache"""
-        # Checking the types and values of iterations, alpha, and step
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
+              graph=True, step=100):
+        """Trains the deep neural network"""
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
-            raise ValueError("iterations must be positive integer")
+            raise ValueError("iterations must be a positive integer")
         if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if not isinstance(step, int):
-            raise TypeError("step must be an integer")
-        if step <= 0 or step > iterations:
-            raise ValueError("step must be positive and <= iterations")
-
-        # Forward propagation, cost calculation, and back propagation in a loop
-        cost_values = []
-        for iteration in range(iterations + 1):
+        if verbose or graph:
+            if not isinstance(step, int):
+                raise TypeError("step must be an integer")
+            if step <= 0 or step > iterations:
+                raise ValueError("step must be positive and <= iterations")
+        costs = []
+        steps = []
+        for i in range(iterations + 1):
             A, cache = self.forward_prop(X)
             cost = self.cost(Y, A)
-            if verbose and iteration % step == 0:
-                print("Cost after {} iterations: {}".format(iteration, cost))
-            if graph and iteration % step == 0:
-                cost_values.append(cost)
-
+            if i % step == 0 or i == iterations:
+                if verbose:
+                    print("Cost after {} iterations: {}".format(i, cost))
+                costs.append(cost)
+                steps.append(i)
             self.gradient_descent(Y, cache, alpha)
-
-        # Plot the training cost graph if graph=True
         if graph:
-            import matplotlib.pyplot as plt
-            plt.plot(range(0, iterations + 1, step), cost_values, 'b-')
+            plt.plot(steps, costs)
             plt.xlabel('iteration')
             plt.ylabel('cost')
             plt.title('Training Cost')
             plt.show()
-
         return self.evaluate(X, Y)
 
     def save(self, filename):
@@ -141,16 +136,9 @@ class DeepNeuralNetwork:
         """Loads a pickled DeepNeuralNetwork object"""
         try:
             with open(filename, 'rb') as file:
-                return pickle.load(file)
+                obj = pickle.load(file)
+            if not isinstance(obj, DeepNeuralNetwork):
+                raise TypeError("file doesn't contain a DeepNeuralNetwork")
+            return obj
         except FileNotFoundError:
-            return None
-
-    @staticmethod
-    def sigmoid(Z):
-        """Sigmoid Activation"""
-        return 1 / (1 + np.exp(-Z))
-
-    @staticmethod
-    def sigmoid_derivative(A):
-        """Sigmoid Derivative"""
-        return A * (1 - A)
+            raise FileNotFoundError("No file found with the name {}".format(filename))
