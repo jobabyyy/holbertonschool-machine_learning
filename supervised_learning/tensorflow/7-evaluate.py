@@ -5,21 +5,21 @@ import tensorflow as tf
 
 
 def evaluate(X, Y, save_path):
-    """returns network prediction, accuracy, & loss, respectively"""
-    tf.reset_default_graph()
+    """Evaluates output of neural network"""
 
     with tf.Session() as sess:
-        saver = tf.train.import_meta_graph(save_path + ".meta")
+        saver = tf.train.import_meta_graph(save_path + '.meta')
         saver.restore(sess, save_path)
 
-        graph = tf.get_default_graph()
-        x = graph.get_tensor_by_name("x:0")
-        y = graph.get_tensor_by_name("y:0")
-        y_pred = graph.get_tensor_by_name("y_pred:0")
-        loss = graph.get_tensor_by_name("loss:0")
-        accuracy = graph.get_tensor_by_name("accuracy:0")
+        x = tf.get_collection('x')[0]
+        y = tf.get_collection('y')[0]
 
-        prediction, acc, l = sess.run([y_pred, accuracy, loss],
-                                      feed_dict={x: X, y: Y})
+        y_pred = tf.get_collection('y_pred')[0]
+        accuracy = tf.get_collection('accuracy')[0]
+        loss = tf.get_collection('loss')[0]
 
-    return prediction, acc, l
+        prediction = sess.run(y_pred, feed_dict={x: X, y: Y})
+        accuracy = sess.run(accuracy, feed_dict={x: X, y: Y})
+        loss = sess.run(loss, feed_dict={x: X, y: Y})
+
+    return (prediction, accuracy, loss)
