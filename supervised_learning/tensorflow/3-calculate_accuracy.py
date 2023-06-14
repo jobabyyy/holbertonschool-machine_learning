@@ -4,7 +4,7 @@
 import tensorflow as tf
 
 
-def calculate_accuray(y, y_pred):
+def calculate_accuracy(y, y_pred):
     """accuracy calculated"""
     correct_predictions = tf.equal(tf.argmax(y, axis=1),
                                    tf.argmax(y_pred, axis=1))
