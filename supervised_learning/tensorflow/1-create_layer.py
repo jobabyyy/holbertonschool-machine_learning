@@ -11,5 +11,4 @@ def create_layer(prev, n, activation):
     layer = tf.layers.dense(prev, n, activation=activation,
                             kernel_initializer=init)
 
-
     return layer
