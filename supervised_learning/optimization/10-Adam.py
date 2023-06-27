@@ -3,6 +3,9 @@
 in tensorflow using the Adam op"""
 
 
+import tensorflow as tf
+
+
 def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
     """creating the training op"""
 
