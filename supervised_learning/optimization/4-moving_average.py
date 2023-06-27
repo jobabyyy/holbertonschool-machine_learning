@@ -10,7 +10,7 @@ def moving_average(data, beta):
     bias_correction = 1 - beta
 
     for i, value in enumerate(data):
-        avg = (beta * avg + (1 - beta) * value) / bias_correction
+        avg = (beta * avg + value) / bias_correction
         moving_averages.append(avg)
 
     return moving_averages
