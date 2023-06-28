@@ -7,22 +7,16 @@ import tensorflow as tf
 
 
 def reate_batch_norm_layer(prev, n, activation):
-    epsilon = 1e-8
-    
-    # Dense layer with kernel initializer
-    layer = tf.layers.Dense(units=n, kernel_initializer=tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG"), use_bias=False)
-    Z = layer(prev)
-    
-    # Batch normalization
-    mean, variance = tf.nn.moments(Z, axes=0)
+    """batch created"""
+    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+
+    dense = tf.layers.Dense(units=n, kernel_initializer=init)
+    Z = dense(prev)
     gamma = tf.Variable(tf.ones([n]))
     beta = tf.Variable(tf.zeros([n]))
-    Z_norm = tf.nn.batch_normalization(Z, mean, variance, beta, gamma, epsilon)
+    mean, var = tf.nn.moments(Z, axes=[0])
+    Z_norm = tf.nn.batch_normalization(
+        Z, mean, var, offset=beta, scale=gamma,
+        variance_epsilon=1e-8)
     
-    # Activation function
-    if activation is not None:
-        A = activation(Z_norm)
-    else:
-        A = Z_norm
-    
-    return A
+    return activation(Z_norm)
