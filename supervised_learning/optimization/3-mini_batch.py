@@ -37,8 +37,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                 Y_batch = shuffled_Y[start:end]
 
                 feed_dict = {x: X_batch, y: Y_batch}
-                _, step_cost, step_accuracy =
-                sess.run([train_op, loss, accuracy], feed_dict=feed_dict)
+                _, step_cost, step_accuracy = sess.run([train_op, loss, accuracy], feed_dict=feed_dict)
 
                 train_cost += step_cost
                 train_accuracy += step_accuracy
@@ -51,15 +50,17 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
             train_cost /= total_batches
             train_accuracy /= total_batches
 
-            valid_cost, valid_accuracy =
-            sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            valid_cost, valid_accuracy = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
 
+            # summary epoch
             print("\tTraining Cost: {}".format(train_cost))
             print("\tTraining Accuracy: {}".format(train_accuracy))
             print("\tValidation Cost: {}".format(valid_cost))
             print("\tValidation Accuracy: {}".format(valid_accuracy))
 
+        # saves the trained model
         saver = tf.train.Saver()
         saver.save(sess, save_path)
+        print("Model saved:", save_path)
 
     return save_path
