@@ -8,13 +8,14 @@ import numpy as np
 
 def specificity(confusion):
     """calc sum of all elements"""
-    total_sum = np.sum(confusion)
+    num_classes = confusion.shape[0]
+    specificity = np.zeros(num_classes)
 
-    neg_sum = total_sum - np.sum(confusion,
-                                 axis=1) - np.sum(confusion,
-                                           axis=0) + np.diag(confusion)
-
-    neg_total = np.sum(neg_sum)
-    specificity = neg_sum / neg_total
+    for i in range(num_classes):
+        true_negatives = np.sum(confusion) - np.sum(
+            confusion[i, :]) - np.sum(confusion[:, i]) + confusion[i, i]
+        false_positives = np.sum(confusion[:, i]) - confusion[i, i]
+        specificity[i] = true_negatives / (
+            true_negatives + false_positives)
 
     return specificity
