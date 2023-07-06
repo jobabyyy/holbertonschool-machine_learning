@@ -3,14 +3,10 @@
 into one-hot matrix"""
 
 
-import numpy as np
+import tensorflow.keras as K
 
 
 def one_hot(labels, classes=None):
-    """converts into one hot matrix"""
-    if classes is None:
-        classes = np.max(labels) + 1
+    """converts into a one-hot matrix"""
 
-    one_hot_matrix = np.eye(classes)[labels]
-
-    return one_hot_matrix
+    return K.utils.to_categorical(labels, classes)
