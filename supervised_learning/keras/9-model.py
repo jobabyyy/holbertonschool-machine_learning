@@ -11,6 +11,7 @@ def save_model(network, filename):
     filename: the path of the file to save the model to"""
     network.save(filename)
 
+
 def load_model(filename):
     """Loads an entire model
     filename: the path of the file to load the model from
