@@ -10,6 +10,6 @@ def train_model(network, data, labels,
     """Trains a model using mini-batch gradient descent
     and analyzes vaildation data"""
     history = network.fit(data, labels, batch_size=batch_size, epochs=epochs,
-                          validation_data=validation_data, verbose=verbose,
+                          validation_data=None, verbose=verbose,
                           shuffle=shuffle)
     return history
