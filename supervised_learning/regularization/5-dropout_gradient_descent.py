@@ -1,31 +1,26 @@
 #!/usr/bin/env python3
-"""updates the weights of a neural network w
-Dropout regularization using
-gradient descent"""
+"""Updates weights of neural network with
+Dropout regularization using gradient descent"""
 
 
 import numpy as np
 
 
 def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
-    """Updates weights of neural network
-    with Dropout using gradient descent"""
+    """Updates weights of neural network with
+    Dropout regularization using gradient descent"""
     m = Y.shape[1]
-
+    dZ = cache["A" + str(L)] - Y
     for i in range(L, 0, -1):
-        A = cache['A' + str(i)]
-        A_prev = cache['A' + str(i - 1)]
-        D = cache['D' + str(i)]
-        W = weights['W' + str(i)]
-        b = weights['b' + str(i)]
-
-        if i == L:
-            dZ = A - Y
-        else:
-            dZ = np.matmul(W.T, dZ) * (1 - np.square(A)) * D / keep_prob
-
-        dW = np.matmul(dZ, A_prev.T) / m
+        A = cache["A" + str(i - 1)]
+        W = weights["W" + str(i)]
+        dW = np.matmul(dZ, A.T) / m
         db = np.sum(dZ, axis=1, keepdims=True) / m
-
-        weights['W' + str(i)] -= alpha * dW
-        weights['b' + str(i)] -= alpha * db
+        dA = np.matmul(W.T, dZ)
+        if i > 1:
+            dA = dA * (1 - A * A)
+            dA = dA * cache["D" + str(i - 1)]
+            dA = dA / keep_prob
+        dZ = dA
+        weights["W" + str(i)] = weights["W" + str(i)] - alpha * dW
+        weights["b" + str(i)] = weights["b" + str(i)] - alpha * db
