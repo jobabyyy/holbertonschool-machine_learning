@@ -11,8 +11,14 @@ def train_model(network, data, labels,
                 verbose=True, shuffle=False):
     """Trains a model using mini-batch gradient descent
     and analyzes vaildation data"""
+
+    if early_stopping and validation_data is not None:
+        early_stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=patience)
+        callbacks.append(early_stop_callback)
+
     history = network.fit(data, labels, batch_size=batch_size, epochs=epochs,
                           validation_data=validation_data, callbacks=callbacks,
                           verbose=verbose,
                           shuffle=shuffle)
+
     return history
