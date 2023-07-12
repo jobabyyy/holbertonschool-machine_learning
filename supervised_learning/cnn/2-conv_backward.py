@@ -14,8 +14,8 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
 
     # computing dimensions of output volume after padding
     if padding == "same":
-        pad_h = int(np.ceil((h_prev - 1) * sh + kh - h_prev) / 2)
-        pad_w = int(np.ceil((w_prev - 1) * sw + kw - w_prev) / 2)
+        pad_h = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
+        pad_w = int(np.ceil(((w_prev - 1) * sw + kw - w_prev) / 2))
     else:
         pad_h, pad_w = 0, 0
 
