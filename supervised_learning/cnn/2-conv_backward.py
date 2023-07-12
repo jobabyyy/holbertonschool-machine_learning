@@ -12,6 +12,13 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
     kh, kw, _, c_new = W.shape
     sh, sw = stride
 
+    h_out = dZ.shape[1]
+    w_out = dZ.shape[2]
+    
+    dA_prev = np.zeros_like(A_prev)
+    dW = np.zeros_like(W)
+    db = np.zeros_like(b)
+
     # computing dimensions of output volume after padding
     if padding == "same":
         pad_h = int(np.ceil(((h_prev - 1) * sh + kh - h_prev) / 2))
@@ -24,10 +31,6 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
 
     h_out = int((h_prev - kh + 2 * pad_h) / sh) + 1
     w_out = int((w_prev - kw + 2 * pad_w) / sw) + 1
-
-    dA_prev = np.zeros_like(A_prev)
-    dW = np.zeros_like(W)
-    db = np.zeros_like(b)
 
     for i in range(m):
         for h in range(h_out):
