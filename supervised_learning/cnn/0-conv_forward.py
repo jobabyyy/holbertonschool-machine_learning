@@ -6,10 +6,7 @@ import numpy as np
 
 
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
-    """Taking dimensions from input, after we will compute output
-    volume.
-    Compute dimensions after padding
-    init the output volume w/ zeros"""
+    """comment"""
     m, h_prev, w_prev, c_prev = A_prev.shape
     kh, kw, _, c_new = W.shape
     sh, sw = stride
@@ -20,14 +17,13 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     else:
         pad_h, pad_w = 0, 0
 
-    A_prev_pad = np.pad(A_prev, ((0, 0), (pad_h, pad_h),
-                        (pad_w, pad_w), (0, 0)), mode="constant")
-
     h_out = int((h_prev - kh + 2 * pad_h) / sh) + 1
     w_out = int((w_prev - kw + 2 * pad_w) / sw) + 1
 
+    A_prev_pad = np.pad(A_prev, ((0, 0), (pad_h, pad_h),
+                        (pad_w, pad_w), (0, 0)), mode="constant")
+
     Z = np.zeros((m, h_out, w_out, c_new))
-    """performing the convolution operation"""
     for i in range(m):
         for h in range(h_out):
             for w in range(w_out):
