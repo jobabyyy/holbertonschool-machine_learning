@@ -66,4 +66,4 @@ def lenet5(x, y):
     optimizer = tf.train.AdamOptimizer()
     train_op = optimizer.minimize(loss)
 
-    return logits, train_op, loss, accuracy
+    return y_pred, train_op, loss, accuracy
