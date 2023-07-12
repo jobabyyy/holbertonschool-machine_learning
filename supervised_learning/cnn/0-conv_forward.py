@@ -4,6 +4,7 @@ convolutional layer of a neural network"""
 
 import numpy as np
 
+
 def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     """Taking dimensions from input, after we will compute output
     volume.
