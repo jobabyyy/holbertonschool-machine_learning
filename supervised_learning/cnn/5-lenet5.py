@@ -25,7 +25,7 @@ def lenet5(X):
 
     # fully connected layer1
     fc1 = K.layers.Dense(units=120, activation='relu',
-                         kernel_initializer=init)(lflatten)
+                         kernel_initializer=init)(flatten)
     # fully connected layer2
     fc2 = K.layers.Dense(units=84, activation='relu',
                          kernel_initializer=init)(fc1)
