@@ -21,8 +21,8 @@ def dense_block(X, nb_filters, growth_rate, layers):
 
         # Convolutional layer
         X = K.layers.Conv2D(filters=growth_rate, kernel_size=(3, 3),
-                   padding='same',
-                   kernel_initializer='he_normal')(X)
+                            padding='same',
+                            kernel_initializer='he_normal')(X)
         X = K.layers.BatchNormalization()(X)
         X = K.layers.Activation('relu')(X)
 
