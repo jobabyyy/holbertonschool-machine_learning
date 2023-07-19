@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Function that builds the inceptiom
+"""Function that builds the inception
 network"""
 
 
@@ -12,48 +12,43 @@ def inception_network():
     blocks. It is designed for image classification.
     func is to input data of shape given below and
     is to return inception Neural Network model. """
-    # input shape
-    input_shape = (224, 224, 3)
+    # Input shape
+    X_input = K.Input(shape=(224, 224, 3))
 
     # input layer
-    inputs = K.Input(shape=input_shape)
+    X = K.layers.Conv2D(64, (7, 7), strides=(2, 2),
+                        padding='same', activation='relu')(X_input)
+    X = K.layers.MaxPool2D((3, 3), strides=(2, 2), padding='same')(X)
 
     # conv layer num1
-    x = K.layers.Conv2D(64, kernel_size=(7, 7), strides=(2, 2), padding='same',
-                        activation='relu')(inputs)
-    x = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2),
-                              padding='same')(x)
+    X = K.layers.Conv2D(192, (3, 3), activation='relu', padding='same')(X)
+    X = K.layers.MaxPool2D((3, 3), strides=(2, 2), padding='same')(X)
 
     # conv layer num2
-    x = K.layers.Conv2D(64, kernel_size=(1, 1), activation='relu')(x)
-    x = K.layers.Conv2D(192, kernel_size=(3, 3), padding='same',
-                        activation='relu')(x)
-    x = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2),
-                              padding='same')(x)
+    X = inception_block(X, [64, 96, 128, 16, 32, 32])
+    X = inception_block(X, [128, 128, 192, 32, 96, 64])
+    X = K.layers.MaxPool2D((3, 3), strides=(2, 2), padding='same')(X)
 
-    # inception block designed for image classification
-    x = inception_block(x, [64, 96, 128, 16, 32, 32])
-    x = inception_block(x, [128, 128, 192, 32, 96, 64])  # Inception 3b
-    x = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2),
-                              padding='same')(x)
+    # inception blocks designed for image classification
+    X = inception_block(X, [192, 96, 208, 16, 48, 64])
+    X = inception_block(X, [160, 112, 224, 24, 64, 64])
+    X = inception_block(X, [128, 128, 256, 24, 64, 64])
+    X = inception_block(X, [112, 144, 288, 32, 64, 64])
+    X = inception_block(X, [256, 160, 320, 32, 128, 128])
+    X = K.layers.MaxPool2D((3, 3), strides=(2, 2), padding='same')(X)
 
-    x = inception_block(x, [192, 96, 208, 16, 48, 64])  # Inception 4a
-    x = inception_block(x, [160, 112, 224, 24, 64, 64])
-    x = inception_block(x, [128, 128, 256, 24, 64, 64])  # Inception 4c
-    x = inception_block(x, [112, 144, 288, 32, 64, 64])  # Inception 4d
-    x = inception_block(x, [256, 160, 320, 32, 128, 128])  # Inception 4e
-    x = K.layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2),
-                              padding='same')(x)
+    # inception 5a and 5b
+    X = inception_block(X, [256, 160, 320, 32, 128, 128])
+    X = inception_block(X, [384, 192, 384, 48, 128, 128])
 
-    x = inception_block(x, [256, 160, 320, 32, 128, 128])  # Inception 5a
-    x = inception_block(x, [384, 192, 384, 48, 128, 128])
+    # final Layers
+    X = K.layers.AveragePooling2D(pool_size=(7, 7),
+                                  strides=(7, 7),
+                                  padding='valid')(X)
+    X = K.layers.Dropout(0.4)(X)  # dropout
+    X = K.layers.Dense(1000, activation='softmax')(X)
 
-    # final layers
-    x = K.layers.AveragePooling2D(pool_size=(7, 7), strides=(1, 1))(x)
-    x = K.layers.Dropout(0.4)(x)
-    x = K.layers.Dense(1000, activation='softmax')(x)
-
-    # create layers
-    model = K.models.Model(inputs=inputs, outputs=x)
+    # create the model
+    model = K.models.Model(inputs=X_input, outputs=X)
 
     return model
