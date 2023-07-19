@@ -53,7 +53,9 @@ def resnet50():
                                   pooling_size=(2, 2))(X)
 
     # output layer
-    X = K.layers.Dense(1000, activation='softmax')(X)
+    X = K.layers.Flatten()(X)
+    X = K.layers.Dense(units=1000, activation='softmax',
+                        kernel_initializer='he_normal')(X)
 
     # create model
     model = K.models.Model(inputs=X_input, outputs=X)
