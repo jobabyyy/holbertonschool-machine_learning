@@ -44,9 +44,9 @@ def resnet50():
     X = identity_block(X, [256, 256, 1024])
 
     # stage5
-    X = projection_block(X, [511, 511, 2048])
-    X = identity_block(X, [511, 511, 2048])
-    X = identity_block(X, [511, 511, 2048])
+    X = projection_block(X, [512, 512, 2048])
+    X = identity_block(X, [512, 512, 2048])
+    X = identity_block(X, [512, 512, 2048])
 
     # average pooling
     X = AveragePooling2D(pool_size=(7, 7), strides=(1, 1),
