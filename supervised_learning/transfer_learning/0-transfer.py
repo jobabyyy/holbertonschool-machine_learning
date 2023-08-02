@@ -2,10 +2,11 @@
 """Task 0: Transfer Learning - Training Model using
 EfficientNetB1 Application"""
 
+
 import os
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB1
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Lambda
 from tensorflow.keras.models import Model
 
 
@@ -21,15 +22,14 @@ def preprocess_data(X, Y):
 # Load CIFAR-10 data
 (X_train, Y_train), (_, _) = tf.keras.datasets.cifar10.load_data()
 
-
 # Preprocess the data
 X_train, Y_train = preprocess_data(X_train, Y_train)
 
-# Resize training images to the desired size for EfficientNetB1
-input_shape = (224, 224)
-X_train_resized = tf.image.resize(X_train, input_shape)
+# Lambda layer to scale up the data to the correct size
+resize_lambda = Lambda(lambda image: tf.image.resize(image,
+                       (224, 224)))(X_train)
 
-# Loading the pre trained EfficientNetB1 model
+# Loading the pre-trained EfficientNetB1 model
 base_model = EfficientNetB1(include_top=False,
                             weights='imagenet',
                             input_shape=(224, 224, 3))
@@ -51,7 +51,7 @@ model.compile(optimizer='adam',
               metrics=['accuracy'])
 
 # Train the custom classification layers on top of the base model
-model.fit(X_train_resized, Y_train, batch_size=128,
+model.fit(resize_lambda, Y_train, batch_size=128,
           epochs=10, validation_split=0.2)
 
 # Save the trained model
