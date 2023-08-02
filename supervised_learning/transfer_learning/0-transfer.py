@@ -29,7 +29,7 @@ X_train, Y_train = preprocess_data(X_train, Y_train)
 input_shape = (224, 224)
 X_train_resized = tf.image.resize(X_train, input_shape)
 
-# Load the pre-trained EfficientNetB1 model
+# Loading the pre trained EfficientNetB1 model
 base_model = EfficientNetB1(include_top=False,
                             weights='imagenet',
                             input_shape=(224, 224, 3))
