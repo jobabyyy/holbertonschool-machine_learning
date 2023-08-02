@@ -27,7 +27,7 @@ X_train, Y_train = preprocess_data(X_train, Y_train)
 
 # Lambda layer to scale up the data to the correct size
 resize_lambda = Lambda(lambda image: tf.image.resize(image,
-                       (224, 224)))(X_train)
+                       (128, 128)))(X_train)
 
 # Loading the pre-trained EfficientNetB1 model
 base_model = EfficientNetB1(include_top=False,
