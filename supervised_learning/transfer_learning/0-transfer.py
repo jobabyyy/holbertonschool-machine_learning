@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Task 0: Transfer Learning - Training Model using
-EfficientNetB1 Application"""
+EfficientNetB0 Application"""
 
 
 import os
 import tensorflow as tf
-from tensorflow.keras.applications import EfficientNetB1
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Lambda
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
+from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
 # Function to preprocess the data
@@ -20,17 +22,20 @@ def preprocess_data(X, Y):
 
 
 # Load CIFAR-10 data
-(X_train, Y_train), (_, _) = tf.keras.datasets.cifar10.load_data()
+(X_train, Y_train), (_, _) = cifar10.load_data()
 
 # Preprocess the data
 X_train, Y_train = preprocess_data(X_train, Y_train)
 
-# Lambda layer to scale up the data to the correct size
-resize_lambda = Lambda(lambda image: tf.image.resize(image,
-                       (128, 128)))(X_train)
+# Resize images to (224, 224) for EfficientNetB0
+X_train_resized = tf.image.resize(X_train, (224, 224))
 
-# Loading the pre-trained EfficientNetB1 model
-base_model = EfficientNetB1(include_top=False,
+# Data augmentation
+datagen = ImageDataGenerator(rotation_range=20,
+                             horizontal_flip=True)
+
+# Loading the pre-trained EfficientNetB0 model
+base_model = EfficientNetB0(include_top=False,
                             weights='imagenet',
                             input_shape=(224, 224, 3))
 
@@ -50,9 +55,14 @@ model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 
-# Train the custom classification layers on top of the base model
-model.fit(resize_lambda, Y_train, batch_size=128,
-          epochs=10, validation_split=0.2)
+# Train the model with data augmentation
+batch_size = 128
+epochs = 10
+steps_per_epoch = len(X_train) // batch_size
+model.fit(datagen.flow(X_train_resized, Y_train,
+          batch_size=batch_size),
+          steps_per_epoch=steps_per_epoch,
+          epochs=epochs)
 
 # Save the trained model
 model.save('cifar10_model.h5')
