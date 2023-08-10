@@ -1,7 +1,7 @@
-## OBJECT DETETCTION
+# OBJECT DETETCTION
 
 
-# General
+## General
 - What is OpenCV and how do you use it?
 - What is object detection?
 - What is the Sliding Windows algorithm?
