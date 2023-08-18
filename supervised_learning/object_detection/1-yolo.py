@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Continued...
+Class Yolo that uses Yolo v3
+algorithm to perform object
+detection
+"""
+
 import numpy as np
 from tensorflow import keras as K
 
@@ -61,17 +68,17 @@ class Yolo:
                                                      np.newaxis,
                                                      np.newaxis]
 
-            box_x = box_tx_sigmoid + grid_x
-            box_y = box_ty_sigmoid + grid_y
+            bx = box_tx / grid_width
+            by = box_ty / grid_height
 
-            box_w = np.exp(box_tw) * self.anchors[:, 0]
-            box_h = np.exp(box_th) * self.anchors[:, 1]
+            bw = np.exp(box_tw) * self.anchors[:, 0] / grid_width
+            bh = np.exp(box_th) * self.anchors[:, 1] / grid_height
 
             # Convert coordinates relative to the size of the image
-            x1 = (box_x - box_w / 2) / grid_width * image_size[1]
-            y1 = (box_y - box_h / 2) / grid_height * image_size[0]
-            x2 = (box_x + box_w / 2) / grid_width * image_size[1]
-            y2 = (box_y + box_h / 2) / grid_height * image_size[0]
+            x1 = (bx - (bw / 2)) * image_size[1]
+            y1 = (by - (bh / 2)) * image_size[0]
+            x2 = (bx + (bw / 2)) * image_size[1]
+            y2 = (by + (bh / 2)) * image_size[0]
 
             # Box confidences and class probabilities
             box_conf = self.sigmoid(output[..., 4:5])
