@@ -1,14 +1,7 @@
 #!/usr/bin/env python3
 
-"""
-Continued...
-Class Yolo that uses Yolo v3
-algorithm to perform object
-detection
-"""
-
-import tensorflow.keras as K
 import numpy as np
+from tensorflow import keras as K
 
 
 class Yolo:
@@ -42,65 +35,54 @@ class Yolo:
         self.anchors = anchors
 
     def process_outputs(self, outputs, image_size):
-        """
-        Attributes used:
-                        outputs: list of numpy.ndarray containing
-                        the predictions from the Darknet model
-                        for a single image
-                                        - grid height
-                                        - grid width
-                                        - anchor boxes
-                                        - classes
-                        image_size: numpy.ndarray containing
-                        the image's original size [image height, width]
-        returns: tuple of
-                 - boxes
-                 - box confidences
-                 - box class probs
-        """
         boxes = []
         box_confidences = []
         box_class_probs = []
 
         for output in outputs:
-            grid_height, grid_width, anchor_boxes = output.shape[:3]
+            grid_height, grid_width, anchor_boxes, _ = output.shape
 
-            processed_boxes = np.zeros((grid_height, grid_width,
-                                        anchor_boxes, 85))
-            processed_box_confidences = output[:, :, :, 4:5]
-            processed_box_class_probs = output[:, :, :, 5:]
+            # Box coordinates adjustment
+            box_tx = output[..., 0:1]
+            box_ty = output[..., 1:2]
+            box_tw = output[..., 2:3]
+            box_th = output[..., 3:4]
 
-            for row in range(grid_height):
-                for col in range(grid_width):
-                    for box in range(anchor_boxes):
-                        # Extract the box coordinates and adjust them based on
-                        # grid, anchor, and image size
-                        t_x, t_y, t_w, t_h = output[row, col,
-                                                    box, :4]
-                        box_x = (col + self.sigmoid(
-                                 t_x)) / grid_width
-                        box_y = (row + self.sigmoid(
-                                 t_y)) / grid_height
-                        box_w = (np.exp(t_w) * self.anchors[
-                                 box][0]) / image_size[1]
-                        box_h = (np.exp(t_h) * self.anchors[
-                                 box][1]) / image_size[0]
+            # Using sigmoid function
+            box_tx_sigmoid = self.sigmoid(box_tx)
+            box_ty_sigmoid = self.sigmoid(box_ty)
 
-                        x1 = processed_boxes[row, col, box, 0]
-                        y1 = processed_boxes[row, col, box, 1]
-                        x2 = processed_boxes[row, col, box, 2]
-                        y2 = processed_boxes[row, col, box, 3]
+            # Create a grid of same shape as the predictions
+            grid = np.arange(grid_height).reshape(1, grid_height)
+            grid_x = np.tile(grid, [grid_width, 1]).T[...,
+                                                      np.newaxis,
+                                                      np.newaxis]
+            grid_y = np.tile(grid, [grid_height, 1])[...,
+                                                     np.newaxis,
+                                                     np.newaxis]
 
-                        processed_boxes[row, col, box, :4] = np.array([
-                                        x1, y1,
-                                        x2, y2])
+            box_x = box_tx_sigmoid + grid_x
+            box_y = box_ty_sigmoid + grid_y
 
-            boxes.append(processed_boxes)
-            box_confidences.append(processed_box_confidences)
-            box_class_probs.append(processed_box_class_probs)
+            box_w = np.exp(box_tw) * self.anchors[:, 0]
+            box_h = np.exp(box_th) * self.anchors[:, 1]
+
+            # Convert coordinates relative to the size of the image
+            x1 = (box_x - box_w / 2) / grid_width * image_size[1]
+            y1 = (box_y - box_h / 2) / grid_height * image_size[0]
+            x2 = (box_x + box_w / 2) / grid_width * image_size[1]
+            y2 = (box_y + box_h / 2) / grid_height * image_size[0]
+
+            # Box confidences and class probabilities
+            box_conf = self.sigmoid(output[..., 4:5])
+            box_class_prob = self.sigmoid(output[..., 5:])
+
+            boxes.append(np.stack([x1, y1, x2, y2], axis=-1))
+            box_confidences.append(box_conf)
+            box_class_probs.append(box_class_prob)
 
         return (boxes, box_confidences, box_class_probs)
 
     @staticmethod
     def sigmoid(x):
-        return 1.0 / (1.0 + np.exp(-x))
+        return 1 / (1 + np.exp(-x))
