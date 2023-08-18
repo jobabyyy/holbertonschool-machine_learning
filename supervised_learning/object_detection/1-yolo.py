@@ -62,7 +62,7 @@ class Yolo:
         for output in outputs:
             grid_height, grid_width, anchor_boxes = output.shape[:3]
 
-            processed_boxes = np.zeros_like(output[:, :, ::4])
+            processed_boxes = np.zeros((grid_height, grid_width, anchor_boxes, 85))
             processed_box_confidences = output[:, :, :, 4:5]
             processed_box_class_probs = output[:, :, :, 5:]
 
@@ -76,12 +76,13 @@ class Yolo:
                         box_w = (np.exp(t_w) * self.anchors[box][0]) / image_size[1]
                         box_h = (np.exp(t_h) * self.anchors[box][1]) / image_size[0]
 
-                        x1 = (box_x - box_w / 2) * image_size[1]
-                        y1 = (box_y - box_h / 2) * image_size[0]
-                        x2 = (box_x + box_w / 2) * image_size[1]
-                        y2 = (box_y + box_h / 2) * image_size[0]
+                        x1 = processed_boxes[row, col, box, 0]
+                        y1 = processed_boxes[row, col, box, 1]
+                        x2 = processed_boxes[row, col, box, 2]
+                        y2 = processed_boxes[row, col, box, 3]
 
-                    processed_boxes[row, col, box, :] = np.array([x1, y1, x2, y2])
+                        processed_boxes[row, col, box, :4] = np.array([x1, y1, x2, y2])
+
 
             boxes.append(processed_boxes)
             box_confidences.append(processed_box_confidences)
