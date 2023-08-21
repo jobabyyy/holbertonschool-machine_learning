@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
+"""Yolo Task 1"""
+
 import numpy as np
 from tensorflow import keras as K
+
+
 class Yolo:
     """
     Yolo class uses algorithm Yolo v3 to complete
@@ -29,7 +33,9 @@ class Yolo:
         self.class_t = class_t
         self.nms_t = nms_t
         self.anchors = anchors
+
     def process_outputs(self, outputs, image_size):
+        """process output"""
         boxes = []
         box_confidences = []
         box_class_probs = []
@@ -61,14 +67,18 @@ class Yolo:
             x2 = (box_x + box_w / 2) / grid_width * image_size[1]
             y2 = (box_y + box_h / 2) / grid_height * image_size[0]
             # Box confidences and class probabilities
+            box[..., 0] = x1
+            box[..., 1] = y1
+            box[..., 2] = x2
+            box[..., 3] = y2
+            boxes.append(box)
             box_conf = self.sigmoid(output[..., 4:5])
             box_class_prob = self.sigmoid(output[..., 5:])
-            boxes.append(np.stack([x1, y1, x2, y2], axis=-1))
             box_confidences.append(box_conf)
             box_class_probs.append(box_class_prob)
-       
+
         return (boxes, box_confidences, box_class_probs)
-    
+
     @staticmethod
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
