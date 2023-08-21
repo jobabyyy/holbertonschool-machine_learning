@@ -3,6 +3,8 @@
 
 import numpy as np
 from tensorflow import keras as K
+
+
 class Yolo:
     """
     Yolo class uses algorithm Yolo v3 to complete
@@ -31,7 +33,9 @@ class Yolo:
         self.class_t = class_t
         self.nms_t = nms_t
         self.anchors = anchors
+
     def process_outputs(self, outputs, image_size):
+        """Processes Outputs"""
         boxes = []
         box_confidences = []
         box_class_probs = []
@@ -68,7 +72,9 @@ class Yolo:
             boxes.append(np.stack([x1, y1, x2, y2], axis=-1))
             box_confidences.append(box_conf)
             box_class_probs.append(box_class_prob)
+
         return (boxes, box_confidences, box_class_probs)
+
     @staticmethod
     def sigmoid(x):
         return 1 / (1 + np.exp(-x))
