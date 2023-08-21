@@ -26,7 +26,7 @@ class Yolo:
                 model_path: path to pretained Yolo model
                 classes_path: list of class names
                 class_t: box score threshold for filtering
-                nnms_t: IOU threshold for non max suppression
+                nms_t: IOU threshold for non max suppression
                 anchors: anchor for box info
         """
         self.model = K.models.load_model(model_path)
