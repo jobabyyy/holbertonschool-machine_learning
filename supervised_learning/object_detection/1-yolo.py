@@ -33,6 +33,9 @@ class Yolo:
         self.class_t = class_t
         self.nms_t = nms_t
         self.anchors = anchors
+        
+        # Print the anchors after assignment
+        print(f"Anchors assigned: {self.anchors}")
 
     def process_outputs(self, outputs, image_size):
         """Processes Outputs"""
@@ -61,6 +64,11 @@ class Yolo:
             box_y = box_ty_sigmoid + grid_y
             box_w = np.exp(box_tw) * self.anchors[:, 0]
             box_h = np.exp(box_th) * self.anchors[:, 1]
+            
+            # Print the intermediate values of box_w and box_h
+            print(f"Box Widths (box_w): {box_w}")
+            print(f"Box Heights (box_h): {box_h}")
+
             # Convert coordinates relative to the size of the image
             x1 = (box_x - box_w / 2) / grid_width * image_size[1]
             y1 = (box_y - box_h / 2) / grid_height * image_size[0]
