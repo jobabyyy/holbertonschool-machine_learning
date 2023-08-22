@@ -68,10 +68,10 @@ class Yolo:
             y2 = (box_y + box_h / 2) / grid_height * image_size[0]
 
             # Box confidences and class probabilities
-            box_conf = self.sigmoid(output[..., 4])
-            box_class_prob = self.sigmoid(output[..., 5:])
             boxes.append(np.stack([x1, y1, x2, y2], axis=-1))
+            box_conf = self.sigmoid(output[..., 4:5])
             box_confidences.append(box_conf)
+            box_class_prob = self.sigmoid(output[..., 5:])
             box_class_probs.append(box_class_prob)
 
         return boxes, box_confidences, box_class_probs
