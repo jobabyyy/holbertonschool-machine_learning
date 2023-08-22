@@ -62,10 +62,10 @@ class Yolo:
             box_w = np.exp(box_tw) * self.anchors[:, 0]
             box_h = np.exp(box_th) * self.anchors[:, 1]
             # Convert coordinates relative to the size of the image
-            x1 = (box_x - (box_w / 2)) * image_size[1]
-            y1 = (box_y - (box_h / 2)) * image_size[0]
-            x2 = (box_x + (box_w / 2)) * image_size[1]
-            y2 = (box_y + (box_h / 2)) * image_size[0]
+            x1 = (box_x - box_w / 2) * image_size[1]
+            y1 = (box_y - box_h / 2) * image_size[0]
+            x2 = (box_x + box_w / 2) * image_size[1]
+            y2 = (box_y + box_h / 2) * image_size[0]
             # Box confidences and class probabilities
             box_conf = self.sigmoid(output[..., 4:5])
             box_class_prob = self.sigmoid(output[..., 5:])
