@@ -42,10 +42,10 @@ class Yolo:
         for output in outputs:
             grid_height, grid_width, anchor_boxes, _ = output.shape
             # Box coordinates adjustment
-            box_tx = output[..., 0]
-            box_ty = output[..., 1]
-            box_tw = output[..., 2]
-            box_th = output[..., 3]
+            box_tx = output[..., 0:1]
+            box_ty = output[..., 1:2]
+            box_tw = output[..., 2:3]
+            box_th = output[..., 3:4]
             # Using sigmoid function
             box_tx_sigmoid = self.sigmoid(box_tx)
             box_ty_sigmoid = self.sigmoid(box_ty)
