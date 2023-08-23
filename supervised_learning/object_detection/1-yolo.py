@@ -57,8 +57,8 @@ class Yolo:
         for i, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
 
-            input_width = self.model.input.shape[1]
-            input_height = self.model.input.shape[2]
+            input_width = self.model.input.shape[1].value
+            input_height = self.model.input.shape[2].value
 
             # Extract box parameters
             box_tx, box_ty, box_tw, box_th = (output[..., 0],
