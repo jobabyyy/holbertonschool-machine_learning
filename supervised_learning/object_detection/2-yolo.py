@@ -95,53 +95,29 @@ class Yolo:
         return boxes, box_confidences, box_class_probs
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
+        """F
         """
-        Filter boxes based on their confidence and class probabilities.
-
-        Arguments:
-        boxes: list of numpy.ndarrays of shape (grid_height,
-        grid_width, anchor_boxes, 4)
-        containing the processed boundary boxes for each output, respectively
-        box_confidences: numpy.ndarrays of shape (grid_height,
-        grid_width, anchor_boxes
-        box_class_probs:numpy.ndarrays of shape (grid_height, grid_width,
-        anchor_boxes, classes) containing the processed box class
-        probabilities for each output, respectively
-
-        Returns:
-        filtered_boxes: a numpy.ndarray containing all of the
-        filtered bounding boxes
-        box_classes: a numpy.ndarray of shape containing the class number
-        that each box in filtered_boxes predicts, respectively
-        box_scores: a numpy.ndarray of shape containing the box scores
-        for each box in filtered_boxes, respectively
-        """
-        # Compute box scores by x box confidences w/ box class probabilities
         box_scores = []
+        box_classes = []
+        filtered_boxes = []
         for i in range(len(boxes)):
-            box_scores.append(box_confidences[i] * box_class_probs[i])
-
-        # Find the index of the highest score for each box
-        box_classes = [np.argmax(box_score, axis=-1)
-                       for box_score in box_scores]
-        # Find the value of the highest score for each box
-        box_class_scores = [np.max(box_score, axis=-1)
-                            for box_score in box_scores]
-
-        # Create a mask to filter out boxes with low scores
-        mask = [box_class_score >= self.class_t
-                for box_class_score in box_class_scores]
-
-        # Apply mask to boxes & scores to keep only the highscoring boxes
-        filtered_boxes = [box[mask[i]] for i, box in enumerate(boxes)]
-        filtered_box_classes = [box_class[mask[i]] for i,
-                                box_class in enumerate(box_classes)]
-        filtered_box_scores = [box_class_score[mask[i]] for i,
-                               box_class_score in enumerate(box_class_scores)]
-
-        # Concatenate all the filtered boxes from all outputs into one list
-        filtered_boxes = np.concatenate(filtered_boxes)
-        filtered_box_classes = np.concatenate(filtered_box_classes)
-        filtered_box_scores = np.concatenate(filtered_box_scores)
-
-        return (filtered_boxes, filtered_box_classes, filtered_box_scores)
+            box_conf = box_confidences[i]
+            box_class_prob = box_class_probs[i]
+            box_class_scores = box_conf * box_class_prob
+            # Find indices of boxes that pass the confidence threshold
+            box_indices = np.where(box_class_scores >= self.class_t)
+            # Flatten the indices for further processing
+            box_indices_flat = (box_indices[0], box_indices[1], box_indices[2])
+            # Extract scores and classes based on the indices
+            scores = box_class_scores[box_indices]
+            classes = np.argmax(box_class_prob, axis=-1)[box_indices]
+            # Filter boxes based on the indices and reshape them
+            filtered_box_coords = boxes[i][box_indices_flat]
+            filtered_box_coords = filtered_box_coords.reshape(-1, 4)
+            box_scores.extend(scores)
+            box_classes.extend(classes)
+            filtered_boxes.extend(filtered_box_coords)
+        box_scores = np.array(box_scores)
+        box_classes = np.array(box_classes)
+        filtered_boxes = np.array(filtered_boxes)
+        return filtered_boxes, box_classes, box_scores
