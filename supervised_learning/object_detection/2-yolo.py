@@ -107,42 +107,26 @@ class Yolo:
             tuple: A tuple of filtered bounding boxes,
             predicted classes, box scores.
         """
-        filtered_boxes = []
+        filtered_boxes = None
         box_classes = []
         box_scores = []
 
-        for box, confidence, class_probs in zip(boxes, box_confidences,
-                                                box_class_probs):
-            # Flatten the arrays for easier manipulation
-            box = box.reshape(-1, 4)
-            confidence = confidence.reshape(-1)
-            class_probs = class_probs.reshape(-1, len(self.class_names))
+        for i in range(len(boxes)):
+            cur_box_score = box_confidences[i] * box_class_probs[i]
+            cur_box_class = np.argmax(cur_box_score, axis=-1)
+            cur_box_score = np.max(cur_box_score, axis=-1)
+            mask = cur_box_score >= self.class_t
 
-            # Get indices of boxes w/ confidence greater than threshold
-            confidence_mask = confidence >= self.class_t
-            boxes_above_confidence = box[confidence_mask]
-            class_probs_above_confidence = class_probs[confidence_mask]
-            confidence_above_confidence = confidence[confidence_mask]
-
-            # Multiply confidence with class probabilities to get box scores
-            box_scores_above_confidence = (
-                confidence_above_confidence *
-                class_probs_above_confidence.max(axis=1)
-            )
-
-            # Get indices of boxes that contribute to max class probability
-            class_indices = class_probs_above_confidence.argmax(axis=1)
-
-            filtered_boxes.append(boxes_above_confidence)
-            box_classes.append(class_indices)
-            box_scores.append(box_scores_above_confidence)
-
-        filtered_boxes = np.concatenate(filtered_boxes, axis=0)
-        box_classes = np.concatenate(box_classes, axis=0)
-        box_scores = np.concatenate(box_scores, axis=0)
+            if filtered_boxes is None:
+                filtered_boxes = boxes[i][mask]
+                box_scores = cur_box_score[mask]
+                box_classes = cur_box_class[mask]
+            else:
+                filtered_boxes = np.concatenate((filtered_boxes,
+                                                 boxes[i][mask]), axis=0)
+                box_classes = np.concatenate((box_classes,
+                                              cur_box_class[mask]), axis=0)
+                box_scores = np.concatenate((box_scores,
+                                             cur_box_score[mask]), axis=0)
 
         return filtered_boxes, box_classes, box_scores
-
-    @staticmethod
-    def sigmoid(x):
-        return 1 / (1 + np.exp(-x))
