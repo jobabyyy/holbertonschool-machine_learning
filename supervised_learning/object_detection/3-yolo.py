@@ -59,8 +59,8 @@ class Yolo:
         for i, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
 
-            input_width = self.model.input.shape[1].value
-            input_height = self.model.input.shape[2].value
+            input_width = self.model.input.shape[1]
+            input_height = self.model.input.shape[2]
 
             # Extract box parameters
             box_tx, box_ty, box_tw, box_th = (output[..., 0],
@@ -183,28 +183,29 @@ class Yolo:
             a numpy.ndarray of shape (?) containing the box scores for
             box_predictions ordered by class and box score
         """
-        kept_indices = []
-        nms_threshold = self.nms_t
+        unique_classes = np.unique(box_classes)
 
-        for class_id in np.unique(box_classes):
-            class_indices = np.where(box_classes == class_id)[0]
+        box_list = []
+        classes_list = []
+        scores_list = []
+        for c in unique_classes:
+            class_indices = np.where(c == box_classes)
+            filtered = filtered_boxes[class_indices]
+            classes = box_classes[class_indices]
+            scores = box_scores[class_indices]
 
-        class_boxes = filtered_boxes[class_indices]
-        class_scores = box_scores[class_indices]
+            keep_indices = self.nms(filtered, self.nms_t, scores)
 
-        # Sort indices based on descending scores
-        sorted_indices = np.argsort(class_scores)[::-1]
+            filtered = filtered[keep_indices]
+            classes = classes[keep_indices]
+            scores = scores[keep_indices]
 
-        while len(sorted_indices) > 0:
-            best_idx = sorted_indices[0]
-            kept_indices.append(class_indices[best_idx])
+            box_list.append(filtered)
+            classes_list.append(classes)
+            scores_list.append(scores)
 
-            best_box = class_boxes[best_idx]
-            ious = self.iou(best_box, class_boxes[sorted_indices[1:]])
+        box_list = np.concatenate(box_list)
+        classes_list = np.concatenate(classes_list)
+        scores_list = np.concatenate(scores_list)
 
-            overlapping_indices = sorted_indices[1:][ious > nms_threshold]
-            sorted_indices = sorted_indices[1:][ious <= nms_threshold]
-
-        return (filtered_boxes[kept_indices],
-                box_classes[kept_indices],
-                box_scores[kept_indices])
+        return box_list, classes_list, scores_list
