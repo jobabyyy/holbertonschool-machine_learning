@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Pt.3: Class Yolo continuation...
-Filter boxes applied."""
+Function non_max_suppression applied
+"""
 
 import numpy as np
 from tensorflow import keras as K
@@ -58,8 +59,8 @@ class Yolo:
         for i, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
 
-            input_width = self.model.input.shape[1].value
-            input_height = self.model.input.shape[2].value
+            input_width = self.model.input.shape[1]
+            input_height = self.model.input.shape[2]
 
             # Extract box parameters
             box_tx, box_ty, box_tw, box_th = (output[..., 0],
@@ -195,6 +196,10 @@ class Yolo:
             kept_indices.append(n + max_score_idx)
             n += count
 
-        return (sorted_box_pred[kept_indices],
-                sorted_box_class[kept_indices],
-                sorted_box_scores[kept_indices])
+        predicted_box_predictions = sorted_box_pred[kept_indices]
+        predicted_box_classes = sorted_box_class[kept_indices]
+        predicted_box_scores = sorted_box_scores[kept_indices]
+
+        return (predicted_box_predictions,
+                predicted_box_classes,
+                predicted_box_scores)
