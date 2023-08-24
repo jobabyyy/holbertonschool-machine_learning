@@ -183,23 +183,28 @@ class Yolo:
             a numpy.ndarray of shape (?) containing the box scores for
             box_predictions ordered by class and box score
         """
-        idx = np.lexsort((-box_scores, box_classes))
-        sorted_box_pred = filtered_boxes[idx]
-        sorted_box_class = box_classes[idx]
-        sorted_box_scores = box_scores[idx]
-        _, counts = np.unique(sorted_box_class, return_counts=True)
-
         kept_indices = []
-        n = 0
-        for count in counts:
-            max_score_idx = np.argmax(sorted_box_scores[n:n + count])
-            kept_indices.append(n + max_score_idx)
-            n += count
+        nms_threshold = self.nms_t
 
-        predicted_box_predictions = sorted_box_pred[kept_indices]
-        predicted_box_classes = sorted_box_class[kept_indices]
-        predicted_box_scores = sorted_box_scores[kept_indices]
+        for class_id in np.unique(box_classes):
+            class_indices = np.where(box_classes == class_id)[0]
 
-        return (predicted_box_predictions,
-                predicted_box_classes,
-                predicted_box_scores)
+        class_boxes = filtered_boxes[class_indices]
+        class_scores = box_scores[class_indices]
+
+        # Sort indices based on descending scores
+        sorted_indices = np.argsort(class_scores)[::-1]
+
+        while len(sorted_indices) > 0:
+            best_idx = sorted_indices[0]
+            kept_indices.append(class_indices[best_idx])
+
+            best_box = class_boxes[best_idx]
+            ious = self.iou(best_box, class_boxes[sorted_indices[1:]])
+
+            overlapping_indices = sorted_indices[1:][ious > nms_threshold]
+            sorted_indices = sorted_indices[1:][ious <= nms_threshold]
+
+        return (filtered_boxes[kept_indices],
+                box_classes[kept_indices],
+                box_scores[kept_indices])
