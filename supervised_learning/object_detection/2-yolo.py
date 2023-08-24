@@ -99,7 +99,7 @@ class Yolo:
         return 1 / (1 + np.exp(-x))
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
-        filtered_boxes = []
+        filtered_boxes = None
         box_classes = []
         box_scores = []
 
@@ -111,19 +111,22 @@ class Yolo:
 
             if filtered_boxes is None:
                 filtered_boxes = boxes[i][mask]
-                box_scores = cur_box_score[mask]
-                box_classes = cur_box_class[mask]
             else:
                 filtered_boxes = np.concatenate((filtered_boxes,
-                                                 boxes[i][mask]), axis=0)
-                box_classes = np.concatenate((box_classes,
-                                              cur_box_class[mask]), axis=0)
-                box_scores = np.concatenate((box_scores,
-                                             cur_box_score[mask]), axis=0)
+                                                 boxes[i][mask]),
+                                                axis=0)
 
-        # Get the class predictions for the filtered boxes
-        box_class_probs = [box_class_probs[i][mask] for i in range(len(boxes))]
-        box_classes = np.concatenate([np.argmax(box_class_prob, axis=-1)
-                                     for box_class_prob in box_class_probs])
+            box_classes.append(cur_box_class[mask])
+            box_scores.append(cur_box_score[mask])
+
+        # Convert the lists to arrays
+        box_classes = np.concatenate(box_classes, axis=0)
+        box_scores = np.concatenate(box_scores, axis=0)
+
+        # Remove low-confidence boxes
+        rm = box_scores < self.class_t
+        filtered_boxes = filtered_boxes[~rm]
+        box_classes = box_classes[~rm]
+        box_scores = box_scores[~rm]
 
         return filtered_boxes, box_classes, box_scores
