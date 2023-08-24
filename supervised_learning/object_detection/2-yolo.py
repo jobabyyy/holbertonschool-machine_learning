@@ -58,8 +58,8 @@ class Yolo:
         for i, output in enumerate(outputs):
             grid_height, grid_width, anchor_boxes, _ = output.shape
 
-            input_width = self.model.input.shape[1].value
-            input_height = self.model.input.shape[2].value
+            input_width = self.model.input.shape[1]
+            input_height = self.model.input.shape[2]
 
             # Extract box parameters
             box_tx, box_ty, box_tw, box_th = (output[..., 0],
@@ -94,30 +94,36 @@ class Yolo:
 
         return boxes, box_confidences, box_class_probs
 
+    @staticmethod
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
-        """F
-        """
-        box_scores = []
-        box_classes = []
         filtered_boxes = []
+        box_classes = []
+        box_scores = []
+
         for i in range(len(boxes)):
-            box_conf = box_confidences[i]
-            box_class_prob = box_class_probs[i]
-            box_class_scores = box_conf * box_class_prob
-            # Find indices of boxes that pass the confidence threshold
-            box_indices = np.where(box_class_scores >= self.class_t)
-            # Flatten the indices for further processing
-            box_indices_flat = (box_indices[0], box_indices[1], box_indices[2])
-            # Extract scores and classes based on the indices
-            scores = box_class_scores[box_indices]
-            classes = np.argmax(box_class_prob, axis=-1)[box_indices]
-            # Filter boxes based on the indices and reshape them
-            filtered_box_coords = boxes[i][box_indices_flat]
-            filtered_box_coords = filtered_box_coords.reshape(-1, 4)
-            box_scores.extend(scores)
-            box_classes.extend(classes)
-            filtered_boxes.extend(filtered_box_coords)
-        box_scores = np.array(box_scores)
-        box_classes = np.array(box_classes)
-        filtered_boxes = np.array(filtered_boxes)
+            cur_box_score = box_confidences[i] * box_class_probs[i]
+            cur_box_class = np.argmax(cur_box_score, axis=-1)
+            cur_box_score = np.max(cur_box_score, axis=-1)
+            mask = cur_box_score >= self.class_t
+
+            if filtered_boxes is None:
+                filtered_boxes = boxes[i][mask]
+                box_scores = cur_box_score[mask]
+                box_classes = cur_box_class[mask]
+            else:
+                filtered_boxes = np.concatenate((filtered_boxes,
+                                                 boxes[i][mask]), axis=0)
+                box_classes = np.concatenate((box_classes,
+                                              cur_box_class[mask]), axis=0)
+                box_scores = np.concatenate((box_scores,
+                                             cur_box_score[mask]), axis=0)
+
+        # Get the class predictions for the filtered boxes
+        box_class_probs = [box_class_probs[i][mask] for i in range(len(boxes))]
+        box_classes = np.concatenate([np.argmax(box_class_prob, axis=-1)
+                                     for box_class_prob in box_class_probs])
+
         return filtered_boxes, box_classes, box_scores
