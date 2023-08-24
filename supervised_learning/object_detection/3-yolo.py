@@ -183,29 +183,19 @@ class Yolo:
             a numpy.ndarray of shape (?) containing the box scores for
             box_predictions ordered by class and box score
         """
-        unique_classes = np.unique(box_classes)
+        idx = np.lexsort((-box_scores, box_classes))
+        sorted_box_pred = filtered_boxes[idx]
+        sorted_box_class = box_classes[idx]
+        sorted_box_scores = box_scores[idx]
+        _, counts = np.unique(sorted_box_class, return_counts=True)
 
-        box_list = []
-        classes_list = []
-        scores_list = []
-        for c in unique_classes:
-            class_indices = np.where(c == box_classes)
-            filtered = filtered_boxes[class_indices]
-            classes = box_classes[class_indices]
-            scores = box_scores[class_indices]
+        kept_indices = []
+        n = 0
+        for count in counts:
+            max_score_idx = np.argmax(sorted_box_scores[n:n + count])
+            kept_indices.append(n + max_score_idx)
+            n += count
 
-            keep_indices = self.nms(filtered, self.nms_t, scores)
-
-            filtered = filtered[keep_indices]
-            classes = classes[keep_indices]
-            scores = scores[keep_indices]
-
-            box_list.append(filtered)
-            classes_list.append(classes)
-            scores_list.append(scores)
-
-        box_list = np.concatenate(box_list)
-        classes_list = np.concatenate(classes_list)
-        scores_list = np.concatenate(scores_list)
-
-        return box_list, classes_list, scores_list
+        return (sorted_box_pred[kept_indices],
+                sorted_box_class[kept_indices],
+                sorted_box_scores[kept_indices])
