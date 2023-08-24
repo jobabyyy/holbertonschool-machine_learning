@@ -235,8 +235,8 @@ class Yolo:
         pimages_list = []
         shapes_list = []
 
-        input_h = self.model.input.shape[2]
-        input_w = self.model.input.shape[1]
+        input_h = self.model.input.shape[2].value
+        input_w = self.model.input.shape[1].value
 
         for image in images:
             # Capture and store the original shape of each image
