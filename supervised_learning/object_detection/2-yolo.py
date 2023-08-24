@@ -99,6 +99,29 @@ class Yolo:
         return 1 / (1 + np.exp(-x))
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
+        """
+        Filters boxes based on confidence scores and class probabilities.
+
+        Args:
+            boxes (list): List of numpy.ndarrays containing box
+            coordinates for each output.
+        box_confidences (list):
+            List of numpy.ndarrays containing
+            box confidences for each output.
+        box_class_probs (list):
+            List of numpy.ndarrays containing box
+            class probabilities for each output.
+        Returns:
+        filtered_boxes (numpy.ndarray):
+            Array containing filtered box
+            coordinates after applying confidence and class filters.
+        box_classes (numpy.ndarray):
+            Array containing class labels
+            corresponding to the filtered boxes.
+        box_scores (numpy.ndarray):
+            Array containing confidence scores
+            corresponding to the filtered boxes.
+        """
         filtered_boxes = None
         box_classes = []
         box_scores = []
