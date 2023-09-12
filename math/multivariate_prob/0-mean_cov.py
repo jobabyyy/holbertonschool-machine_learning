@@ -6,6 +6,7 @@ import numpy as np
 
 
 def mean_cov(X):
+    """func for mean & cov"""
     if not isinstance(X, np.ndarray) or X.ndim != 2:
         raise TypeError("X must be a 2D numpy.ndarray")
 
@@ -18,9 +19,9 @@ def mean_cov(X):
     cov = np.zeros((d, d))
 
     for i in range(d):
-        for j in range(i, d):
-            cov[i,
-                j] = np.mean((X[:, i] - mean[0, i]) * (X[:, j] - mean[0, j]))
-            cov[j, i] = cov[i, j]
+        for j in range(d):
+            cov[i, j] = np.sum((
+                X[:,
+                  i] - mean[0, i]) * (X[:, j] - mean[0, j])) / (n - 1)
 
     return mean, cov
