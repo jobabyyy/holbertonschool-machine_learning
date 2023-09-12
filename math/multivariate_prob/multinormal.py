@@ -44,4 +44,3 @@ class MultiNormal:
         normalization = 1 / ((2 * np.pi) ** (d / 2) * np.sqrt(det_cov))
 
         return normalization * np.exp(exponent)[0, 0]
-
