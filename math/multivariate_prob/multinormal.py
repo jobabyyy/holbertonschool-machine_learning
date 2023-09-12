@@ -25,3 +25,22 @@ class MultiNormal:
                                          (data[i, :] - self.mean[i,
                                           0]) * (data[j, :] - self.mean[j, 0]))
                 self.cov[j, i] = self.cov[i, j]
+
+    def pdf(self, x):
+        """func to calc the PDF datapoint"""
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must be a numpy.ndarray")
+
+        d, _ = self.mean.shape
+
+        if x.shape != (d, 1):
+            raise ValueError(f"x must have the shape ({d}, 1)")
+
+        x_minus_mean = x - self.mean
+        exponent = -0.5 * np.dot(np.dot(x_minus_mean.T,
+                                 np.linalg.inv(self.cov)), x_minus_mean)
+        coefficient = 1 / ((2 * np.pi) ** (d /
+                                           2) * np.sqrt(np.linalg.det
+                                                        (self.cov)))
+
+        return coefficient * np.exp(exponent)
