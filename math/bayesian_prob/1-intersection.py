@@ -41,6 +41,7 @@ def likelihood(x, n, P):
 
     return likelihoods
 
+
 def intersection(x, n, P, Pr):
     """tesing hypotheticals"""
     if not isinstance(n, int) or n <= 0:
@@ -49,7 +50,7 @@ def intersection(x, n, P, Pr):
     if not isinstance(x, int) or x > n:
         raise ValueError(
             "x must be an integer that is greater than or equal to 0")
-    
+
     if x > 0:
         raise ValueError("x cannot be greater than n")
 
