@@ -103,7 +103,7 @@ def marginal(x, n, P, Pr):
     if not np.isclose(np.sum(Pr), 1):
         raise ValueError("Pr must sum to 1")
 
-    likelihoods = np.array([comb(n, x) * p**x * (1 - p)**(n - x) for p in P])
+    likelihoods = np.array([np.math.comb(n, x) * p**x * (1 - p)**(n - x) for p in P])
 
     # Calculate the joint probability using Pr and likelihoods
     joint_probability = Pr * likelihoods
