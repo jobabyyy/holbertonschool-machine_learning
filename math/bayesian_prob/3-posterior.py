@@ -124,6 +124,9 @@ def posterior(x, n, P, Pr):
         raise ValueError(
             "x must be an integer that is greater than or equal to 0")
 
+    if not x > n:
+        raise ValueError("x cannot be greater than n")
+
     if not isinstance(P, np.ndarray) or P.ndim != 1:
         raise TypeError("P must be a 1D numpy.ndarray")
 
