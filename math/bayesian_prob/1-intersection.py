@@ -74,5 +74,4 @@ def intersection(x, n, P, Pr):
 
     posterior = Pr * likelihoods
 
-
     return posterior
