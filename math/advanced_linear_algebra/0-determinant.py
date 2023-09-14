@@ -18,7 +18,7 @@ def determinant(matrix):
         raise ValueError("matrix must be a square matrix")
     # Base cases for 0x0 and 1x1 matrices
     if num_rows == 0:
-        return 1 
+        return 1
     if num_rows == 1:
         return matrix[0][0]
     det = 0
