@@ -5,6 +5,15 @@
 import numpy as np
 
 
+def comb(n, k):
+    """calculate the binomial coefficient C(n, k)"""
+    if 0 <= k <= n:
+        return np.math.factorial(n) // (
+            np.math.factorial(k) * np.math.factorial(n - k))
+    else:
+        return 0
+
+
 def likelihood(x, n, P):
     """func to check likelihood"""
     if not isinstance(n, int) or n <= 0:
@@ -60,12 +69,3 @@ def intersection(x, n, P, Pr):
     posterior = (Pr * likelihoods) / np.sum(Pr * likelihoods)
 
     return posterior
-
-
-def comb(n, k):
-    """calculate the binomial coefficient C(n, k)"""
-    if 0 <= k <= n:
-        return np.math.factorial(n) // (
-            np.math.factorial(k) * np.math.factorial(n - k))
-    else:
-        return 0
