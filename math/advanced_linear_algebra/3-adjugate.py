@@ -5,7 +5,9 @@
 def determinant(matrix):
     """Function to calculate the determinant of a matrix"""
     # Check if the input is a list of lists
-    if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix,
+                      list) or not all(isinstance(row,
+                                       list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
     # Check if the matrix is square
     num_rows = len(matrix)
@@ -32,7 +34,9 @@ def determinant(matrix):
 
 def minor(matrix):
     """Calculate the minor matrix of a matrix."""
-    if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix,
+                      list) or not all(isinstance(row,
+                                       list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
     num_rows = len(matrix)
     if num_rows == 0:
@@ -46,7 +50,8 @@ def minor(matrix):
         minor_row = []
         for j in range(num_columns):
             # Create a submatrix by excluding the i-th row and j-th column
-            submatrix = [row[:j] + row[j + 1:] for row in (matrix[:i] + matrix[i + 1:])]
+            submatrix = [row[:j] + row[j + 1:] for row in (
+                         matrix[:i] + matrix[i + 1:])]
             # Calculate the determinant of the submatrix
             minor_value = determinant(submatrix)
             minor_row.append(minor_value)
@@ -57,7 +62,10 @@ def minor(matrix):
 
 def cofactor(matrix):
     """Calculate the cofactor matrix of a matrix."""
-    if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix,
+                      list) or not all(isinstance(row,
+                                       list) for row
+                                       in matrix):
         raise TypeError("matrix must be a list of lists")
     num_rows = len(matrix)
     if num_rows == 0:
@@ -69,7 +77,8 @@ def cofactor(matrix):
     for i in range(num_rows):
         cofactor_row = []
         for j in range(num_columns):
-            submatrix = [row[:j] + row[j + 1:] for row in (matrix[:i] + matrix[i + 1:])]
+            submatrix = [row[:j] + row[j + 1:] for row in
+                         (matrix[:i] + matrix[i + 1:])]
             minor_value = determinant(submatrix)
             cofactor_value = minor_value * (-1) ** (i + j)
             cofactor_row.append(cofactor_value)
@@ -77,9 +86,12 @@ def cofactor(matrix):
 
     return cofactor_matrix
 
+
 def adjugate(matrix):
     """Calculate the adjugate matrix of a matrix."""
-    if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
+    if not isinstance(matrix, list) or not all(isinstance(row,
+                                               list) for row
+                                               in matrix):
         raise TypeError("matrix must be a list of lists")
     num_rows = len(matrix)
     if num_rows == 0:
@@ -93,11 +105,13 @@ def adjugate(matrix):
     for i in range(num_rows):
         cofactor_row = []
         for j in range(num_columns):
-            submatrix = [row[:j] + row[j + 1:] for row in (matrix[:i] + matrix[i + 1:])]
+            submatrix = [row[:j] + row[j + 1:]
+                         for row in (matrix[:i] + matrix[i + 1:])]
             minor_value = determinant(submatrix)
             cofactor_value = minor_value * (-1) ** (i + j)
             cofactor_row.append(cofactor_value)
         cofactor_matrix.append(cofactor_row)
-    adjugate_matrix = [[cofactor_matrix[j][i] for j in range(num_rows)] for i in range(num_columns)]
+    adjugate_matrix = [[cofactor_matrix[j][i] for j in range(num_rows)
+                        ] for i in range(num_columns)]
 
     return adjugate_matrix
