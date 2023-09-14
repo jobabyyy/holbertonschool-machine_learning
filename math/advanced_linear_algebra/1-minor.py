@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """A.L.A: Minors"""
 
+import numpy as np
 
 def determinant(matrix):
     """Function to calculate the determinant of a matrix"""
@@ -12,7 +13,7 @@ def determinant(matrix):
         return 1
     num_rows = len(matrix)
     if num_rows == 0:
-        raise ValueError("matrix must be a non-empty square matrix")
+        raise ValueError("matrix must be a square matrix")
     num_columns = len(matrix[0])
     if num_rows != num_columns:
         raise ValueError("matrix must be a non-empty square matrix")
@@ -43,6 +44,9 @@ def minor(matrix):
 
     if num_rows != num_columns:
         raise ValueError("matrix must be a non-empty square matrix")
+
+    if num_rows == 1:
+        return matrix[0][0]
 
     minor_matrix = []
 
