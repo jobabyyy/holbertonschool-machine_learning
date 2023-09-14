@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """A.L.A: Minors"""
 
-import numpy as np
 
 def determinant(matrix):
     """Function to calculate the determinant of a matrix"""
