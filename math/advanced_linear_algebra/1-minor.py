@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """A.L.A: Minors"""
 
+import numpy as np
 
 def determinant(matrix):
     """Function to calculate the determinant of a matrix"""
@@ -12,10 +13,10 @@ def determinant(matrix):
         return 1
     num_rows = len(matrix)
     if num_rows == 0:
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
     num_columns = len(matrix[0])
     if num_rows != num_columns:
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
     # Base cases for 0x0 and 1x1 matrices
     if num_rows == 0:
         return 1
@@ -42,17 +43,18 @@ def minor(matrix):
     num_columns = len(matrix[0])
 
     if num_rows != num_columns:
-        raise ValueError("matrix must be a square matrix")
+        raise ValueError("matrix must be a non-empty square matrix")
 
     minor_matrix = []
 
     for i in range(num_rows):
         minor_row = []
+
         for j in range(num_columns):
-            # Create a submatrix by excluding the i-th row and j-th column
             submatrix = [row[:j] + row[j + 1:]
                          for row in
                          (matrix[:i] + matrix[i + 1:])]
+
             # Calculate the determinant of the submatrix
             minor_value = determinant(submatrix)
             minor_row.append(minor_value)
