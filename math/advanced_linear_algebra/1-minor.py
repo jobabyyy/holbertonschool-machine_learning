@@ -38,6 +38,8 @@ def minor(matrix):
                                        list) for row in matrix):
         raise TypeError("matrix must be a list of lists")
     num_rows = len(matrix)
+    if matrix == [[]]:
+        return 1
     if num_rows == 0:
         raise ValueError("matrix must be a non-empty square matrix")
     num_columns = len(matrix[0])
