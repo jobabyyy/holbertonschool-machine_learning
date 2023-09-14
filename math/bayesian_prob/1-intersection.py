@@ -66,11 +66,13 @@ def intersection(x, n, P, Pr):
     if not np.all((Pr >= 0) & (Pr <= 1)):
         raise ValueError("All values in Pr must be in the range [0, 1]")
 
-    if not np.isclose(np.sum(Pr), 1.0):
+    if not np.isclose(np.sum(Pr), 1):
         raise ValueError("Pr must sum to 1")
 
     likelihoods = np.array([comb(n,
                             x) * p**x * (1 - p)**(n - x) for p in P])
-    posterior = (Pr * likelihoods) / np.sum(Pr * likelihoods)
+
+    posterior = Pr * likelihoods
+
 
     return posterior
