@@ -135,11 +135,11 @@ def posterior(x, n, P, Pr):
 
     if not np.all((P >= 0) & (P <= 1)):
         raise ValueError(
-            "All values in P must be in the range [0, 1] where P")
+            "All values in P must be in the range [0, 1]")
 
     if not np.all((Pr >= 0) & (Pr <= 1)):
         raise ValueError(
-            "All values in Pr must be in the range [0, 1] where Pr")
+            "All values in Pr must be in the range [0, 1]")
 
     if not np.isclose(np.sum(Pr), 1):
         raise ValueError("Pr must sum to 1")
