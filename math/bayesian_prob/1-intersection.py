@@ -66,7 +66,6 @@ def intersection(x, n, P, Pr):
 
     if not np.all((Pr >= 0) & (Pr <= 1)):
         raise ValueError(f"All values in Pr must be in the range [0, 1]")
-
     if not np.isclose(np.sum(Pr), 1.0):
         raise ValueError("Pr must sum to 1")
 
