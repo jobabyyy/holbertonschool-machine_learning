@@ -32,5 +32,4 @@ def pca(X, var=0.95):
     # Extract principle components
     X = eigvecs[:, :num_dimensions]
 
-
     return X
