@@ -30,6 +30,7 @@ def initialize(X, k):
                                   size=(k, d))
     return centroids
 
+
 def kmeans(X, k, iteration=1000):
     """fun kmeans that performs K-means
     on a dataset.
@@ -45,8 +46,8 @@ def kmeans(X, k, iteration=1000):
              cluster in C that each data
              point belongs to."""
 
-    if type(k) is not int or k <= 0:
-        return None, None
+    if type(k) is not int or k <= 0 or k >= X.shape[0]:
+        return None
     if type(X) is not np.ndarray or len(X.shape) != 2:
         return None, None
     if type(iteration) is not int or iteration <= 0:
@@ -58,10 +59,10 @@ def kmeans(X, k, iteration=1000):
     centroids = np.random.uniform(np.min(X, axis=0), np.max(X, axis=0),
                                   size=(k, d))
     for i in range(iteration):
-        centroid_copy = centroids.copy() # copy to check convergence
+        centroid_copy = centroids.copy()  # copy to check convergence
         # calc distance between closest centroid
         distance = np.sqrt(((X - centroids[:, np.newaxis]) ** 2).sum(axis=2))
-        clss = np.argmin(distance, axis=0) # assigning data points
+        clss = np.argmin(distance, axis=0)  # assigning data points
 
         for j in range(k):
             if len(X[clss == j]) == 0:
