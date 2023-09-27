@@ -32,7 +32,7 @@ def pca(X, ndim):
     eigvecs = eigvecs[:, sorted_indices]
 
     # Select the top 'ndim' eigenvectors
-    top_eigvecs = eigvecs[:, :ndim]
+    top_eigvecs = eigvecs[:, :ndim+1]
 
     # Principal components
     T = np.dot(X, top_eigvecs)
