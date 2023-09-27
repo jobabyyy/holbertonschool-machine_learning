@@ -27,7 +27,7 @@ def pca(X, ndim):
     eigvals, eigvecs = np.linalg.eigh(cov_matrix)
 
     # Sort eigenvalues and eigenvectors
-    sorted_indices = np.argsort(eigvals)[::-1]
+    sorted_indices = np.argsort(eigvals)[:-1]
     eigvals = eigvals[sorted_indices]
     eigvecs = eigvecs[:, sorted_indices]
 
