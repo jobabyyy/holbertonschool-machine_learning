@@ -44,25 +44,38 @@ def kmeans(X, k, iteration=1000):
              containing the index of the
              cluster in C that each data
              point belongs to."""
-    C = initialize(X, k)
-    if C is None:
+    if type(k) is not int or k <= 0 or type(
+        iteration) is not int or iteration <= 0:
         return None, None
 
-    # assign data point to closest centroid
+    if type(X) is not np.ndarray or len(X.shape) != 2:
+        return None, None
+
+    n, d = X.shape
+    centroids = np.random.uniform(np.min(X, axis=0),
+                                 np.max(X, axis=0),
+                                 size=(k, d))
+
     for i in range(iteration):
-        # compute distance
-        distance = np.linalg.norm(X[:, np.newaxis]
-                                  - C, axis=2)
+        # assign data point to closest centroid
+        distance = np.linalg.norm(X[:, np.newaxis] - centroids, axis=2)
         # assign to closest cluster
         clss = np.argmin(distance, axis=1)
 
-        # updating clusters
-        updated_C = np.array([X[clss == i].mean(axis=0)
-                             for i in range(k)])
-        # checking for covergence
-        if np.array_equal(updated_C, C):
-            return C, clss
-        
-        C = updated_C
+        centroids_copy = centroids.copy()
 
-    return C, clss
+        for j in range(k):
+            # Taking data points closest to current clustet
+            cluster = X[clss == j]
+            if len(cluster) == 0:
+                # If no data points in the cluster, reinitialize the centroid
+                centroids[j] = np.random.uniform(np.min(X, axis=0),
+                np.max(X, axis=0), size=(1, d))
+            else:
+                # Update the centroid to be mean of data points in cluster
+                centroids[j] = cluster.mean(axis=0)
+        if np.array_equal(centroids, centroids_copy):
+            # Check for convergence
+            return centroids, clss
+
+    return centroids, clss
