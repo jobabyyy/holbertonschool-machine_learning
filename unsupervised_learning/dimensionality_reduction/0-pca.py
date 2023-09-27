@@ -24,7 +24,7 @@ def pca(X, var=0.95):
 
     # Determine target variance:
     total_variance = np.sum(eigvals)
-    exp_variance = eigvals / total_variance
+    exp_variance = eigvals * total_variance
 
     # Find min num of dimensions
     cumulative_variance = np.cumsum(exp_variance)
