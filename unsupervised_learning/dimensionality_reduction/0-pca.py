@@ -17,14 +17,14 @@ def pca(X, var=0.95):
 
     # Sort eigenvalues and eigenvectors in descending order
     sorted_indices = np.arange(0, len(eigvals), 1)
-    sorted_indices = ([x for  _, x in sorted(
+    sorted_indices = ([x for _, x in sorted(
                       zip(eigvals, sorted_indices))])[::-1]
     eigvals = eigvals[sorted_indices]
     eigvecs = eigvecs[:, sorted_indices]
 
     # Determine target variance:
     total_variance = np.sum(eigvals)
-    exp_variance = eigvals * total_variance
+    exp_variance = eigvals / total_variance
 
     # Find min num of dimensions
     cumulative_variance = np.cumsum(exp_variance)
