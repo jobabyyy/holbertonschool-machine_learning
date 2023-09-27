@@ -37,49 +37,44 @@ def kmeans(X, k, iteration=1000):
        n - is the num of data points.
        d - is the num of dimensions
     K: is a positive int containing the max
-    num of iterations that should be performed.
+    num of iteration that should be performed.
     Returns: C, clss, or None, None on failure.
              C - is a numpy.ndarray of shape (n,d)
              clss - is a numpy.ndarray of shape (n,)
              containing the index of the
              cluster in C that each data
              point belongs to."""
-    if type(k) is not int or k <= 0 or type(
-        iteration) is not int or iteration <= 0:
-        return None, None
 
+    if type(k) is not int or k <= 0:
+        return None, None
     if type(X) is not np.ndarray or len(X.shape) != 2:
+        return None, None
+    if type(iteration) is not int or iteration <= 0:
         return None, None
 
     n, d = X.shape
-    centroids = np.random.uniform(np.min(X, axis=0),
-                                 np.max(X, axis=0),
-                                 size=(k, d))
 
+    # init cluster centroid using MUD
+    centroids = np.random.uniform(np.min(X, axis=0), np.max(X, axis=0),
+                                  size=(k, d))
     for i in range(iteration):
-        cluster_sum = np.zeros((k,d))
-        cluster_counts = np.zeros(k, dtype=int)
+        centroid_copy = centroids.copy() # copy to check convergence
+        # calc distance between closest centroid
+        distance = np.sqrt(((X - centroids[:, np.newaxis]) ** 2).sum(axis=2))
+        clss = np.argmin(distance, axis=0) # assigning data points
 
         for j in range(k):
-            # Taking data points closest to current clustet
-            distance = np.linalg.norm(X[j] - centroids, axis=1)
-            c_cluster = np.argmin(distance)
-            cluster_sum[c_cluster] += X[j]
-            cluster_counts[c_cluster] += 1
-
-        centroids_copy = centroids.copy()
-
-        for j in range(k):
-            if cluster_counts[j] == 0:
+            if len(X[clss == j]) == 0:
                 centroids[j] = np.random.uniform(np.min(X, axis=0),
-                np.max(X, axis=0), size=(1,d))
+                                                 np.max(X, axis=0),
+                                                 size=(1, d))
             else:
-                centroids[j] = cluster_sum[j] / cluster_counts[j]
-        if np.array_equal(centroids, centroids_copy):
-            return centroids, np.argmin(np.linalg.norm(X[:,
-            np.newaxis] - centroids, axis=2), axis=1)
+                centroids[j] = (X[clss == j]).mean(axis=0)
+        distance = np.sqrt(((X - centroids[:, np.newaxis]) ** 2).sum(axis=2))
 
-        clss = np.argmin(np.linalg.norm(X[:,
-        np.newaxis] - centroids, axis=2), axis=1)
+        clss = np.argmin(distance, axis=0)
+        # checking for convergence
+        if np.all(centroid_copy == centroids):
+            return centroids, clss
 
     return centroids, clss
