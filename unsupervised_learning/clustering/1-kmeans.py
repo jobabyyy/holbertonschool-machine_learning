@@ -58,11 +58,9 @@ def kmeans(X, k, iteration=1000):
 
         # updating clusters
         updated_C = np.array([X[clss == i].mean(axis=0)
-                             if np.sum(clss == i) > 0
-                             else initialize(X, 1)[0]
                              for i in range(k)])
         # checking for covergence
-        if np.all(updated_C == C):
+        if np.array_equal(updated_C, C):
             return C, clss
         
         C = updated_C
