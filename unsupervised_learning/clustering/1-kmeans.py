@@ -57,25 +57,29 @@ def kmeans(X, k, iteration=1000):
                                  size=(k, d))
 
     for i in range(iteration):
-        # assign data point to closest centroid
-        distance = np.linalg.norm(X[:, np.newaxis] - centroids, axis=2)
-        # assign to closest cluster
-        clss = np.argmin(distance, axis=1)
+        cluster_sum = np.zeros((k,d))
+        cluster_counts = np.zeros(k, dtype=int)
+
+        for j in range(k):
+            # Taking data points closest to current clustet
+            distance = np.linalg.norm(X[j] - centroids, axis=1)
+            c_cluster = np.argmin(distance)
+            cluster_sum[c_cluster] += X[j]
+            cluster_counts[c_cluster] += 1
 
         centroids_copy = centroids.copy()
 
         for j in range(k):
-            # Taking data points closest to current clustet
-            cluster = X[clss == j]
-            if len(cluster) == 0:
-                # If no data points in the cluster, reinitialize the centroid
+            if cluster_counts[j] == 0:
                 centroids[j] = np.random.uniform(np.min(X, axis=0),
-                np.max(X, axis=0), size=(1, d))
+                np.max(X, axis=0), size=(1,d))
             else:
-                # Update the centroid to be mean of data points in cluster
-                centroids[j] = cluster.mean(axis=0)
-            if np.array_equal(centroids, centroids_copy):
-            # Check for convergence
-                return centroids, clss
+                centroids[j] = cluster_sum[j] / cluster_counts[j]
+        if np.array_equal(centroids, centroids_copy):
+            return centroids, np.argmin(np.linalg.norm(X[:,
+            np.newaxis] - centroids, axis=2), axis=1)
+
+        clss = np.argmin(np.linalg.norm(X[:,
+        np.newaxis] - centroids, axis=2), axis=1)
 
     return centroids, clss
