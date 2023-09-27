@@ -74,8 +74,8 @@ def kmeans(X, k, iteration=1000):
             else:
                 # Update the centroid to be mean of data points in cluster
                 centroids[j] = cluster.mean(axis=0)
-        if np.array_equal(centroids, centroids_copy):
+            if np.array_equal(centroids, centroids_copy):
             # Check for convergence
-            return centroids, clss
+                return centroids, clss
 
     return centroids, clss
