@@ -21,20 +21,17 @@ def pca(X, ndim):
     Returns: a numpy.ndarray of shape
     (n, ndim) containing the transformed
     version of 'X'. """
+    x_c = X - np.mean(X, axis=0)
+
     cov_matrix = np.cov(X, rowvar=False)
 
     # Perform eigenvalue decomposition covariance matrix
     eigvals, eigvecs = np.linalg.eigh(cov_matrix)
 
     # Sort eigenvalues and eigenvectors
-    sorted_indices = np.argsort(eigvals)[:-1]
-    eigvals = eigvals[sorted_indices]
-    eigvecs = eigvecs[:, sorted_indices]
+    sorted_indices = np.argsort(eigvals)[::-1][:ndim]
+    t_eigvals = eigvecs[:, sorted_indices]
 
-    # Select the top 'ndim' eigenvectors
-    top_eigvecs = eigvecs[:, :ndim+1]
-
-    # Principal components
-    T = np.dot(X, top_eigvecs)
+    T = np.dot(x_c, t_eigvals)
 
     return T
