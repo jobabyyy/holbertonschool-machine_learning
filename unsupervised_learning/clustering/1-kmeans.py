@@ -16,9 +16,9 @@ def initialize(X, k):
             centroids for each cluster,
             or None on failure"""
     if type(X) is not np.ndarray or len(X.shape) != 2:
-        return None, None
+        return None
     if type(k) is not int or k <= 0:
-        return None, None
+        return None
     n, d = X.shape
 
     # calc min & max values
@@ -47,7 +47,7 @@ def kmeans(X, k, iterations=1000):
              point belongs to."""
 
     if type(k) is not int or k <= 0:
-        return None
+        return None, None
     if type(X) is not np.ndarray or len(X.shape) != 2:
         return None, None
     if type(iterations) is not int or iterations <= 0:
