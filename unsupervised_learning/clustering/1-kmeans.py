@@ -73,7 +73,7 @@ def kmeans(X, k, iteration=1000):
         distance = np.sqrt(((X - centroids[:, np.newaxis]) ** 2).sum(axis=2))
 
         clss = np.argmin(distance, axis=0)
-        # checking for convergence
+        # checking 4 convergence
         if np.all(centroid_copy == centroids):
             return centroids, clss
 
