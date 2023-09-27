@@ -31,14 +31,14 @@ def initialize(X, k):
     return centroids
 
 
-def kmeans(X, k, iteration=1000):
+def kmeans(X, k, iterations=1000):
     """fun kmeans that performs K-means
     on a dataset.
     x: is a numpy.ndarray of shape (n, d).
        n - is the num of data points.
        d - is the num of dimensions
     K: is a positive int containing the max
-    num of iteration that should be performed.
+    num of iterations that should be performed.
     Returns: C, clss, or None, None on failure.
              C - is a numpy.ndarray of shape (n,d)
              clss - is a numpy.ndarray of shape (n,)
@@ -50,7 +50,7 @@ def kmeans(X, k, iteration=1000):
         return None
     if type(X) is not np.ndarray or len(X.shape) != 2:
         return None, None
-    if type(iteration) is not int or iteration <= 0:
+    if type(iterations) is not int or iterations <= 0:
         return None, None
 
     n, d = X.shape
@@ -58,7 +58,7 @@ def kmeans(X, k, iteration=1000):
     # init cluster centroid using MUD
     centroids = np.random.uniform(np.min(X, axis=0), np.max(X, axis=0),
                                   size=(k, d))
-    for i in range(iteration):
+    for i in range(iterations):
         centroid_copy = centroids.copy()  # copy to check convergence
         # calc distance between closest centroid
         distance = np.sqrt(((X - centroids[:, np.newaxis]) ** 2).sum(axis=2))
