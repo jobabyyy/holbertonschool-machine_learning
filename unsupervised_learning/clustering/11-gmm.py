@@ -18,7 +18,7 @@ def gmm(X, k):
     clss: is a numpy.ndarray of shape (n,)
           containing the cluster indices
           for each data point"""
-    gmm_model = sklearn.mixture.GaussianMixture(n_components=k).fit(X)
+    gmm_model = sklearn.mixture.GaussianMixture(k).fit(X)
     pi = gmm_model.weights_
     m = gmm_model.means_
     S = gmm_model.covariance_
