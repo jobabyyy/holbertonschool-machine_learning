@@ -21,25 +21,32 @@ def expectation_maximization(X, k, iterations=1000, tol=1e-5, verbose=False):
         return None, None, None, None, None
 
     n, d = X.shape
-    # init GMM parameters
+    # Initialize GMM parameters
     pi, m, S = initialize(X, k)
     l_prev = 0  # Initialize previous log likelihood
+    i = 0  # Initialize iteration counter
 
-    for i in range(iterations):
-        # calculate posterior probabilities and log likelihood
+    while i < iterations:
         g, log = expectation(X, pi, m, S)
 
-        # update parameters
+        # Maximization step: update parameters
         pi, m, S = maximization(X, g)
 
-        if verbose and (i % 10 == 0 or i == iterations - 1):
-            # print log likelihood
-            print(f"Log Likelihood after {i} iterations: {log:.5f}")
+        if verbose and (i % 10 == 0):
+            # Print log likelihood every 10 iterations
+            rounded = log.round(5)
+            print("Log Likelihood after {i} iterations: {rounded}")
 
-        # checking log likelihood
+        # Check if log likelihood change is below tolerance
         if abs(log - l_prev) <= tol:
             break
 
         l_prev = log  # Update previous log likelihood
+        i += 1
+
+    if verbose:
+        # Print final log likelihood if verbose is True
+        rounded = log.round(5)
+        print("Log Likelihood after {i} iterations: {rounded}")
 
     return pi, m, S, g, log
