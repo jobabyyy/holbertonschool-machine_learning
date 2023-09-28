@@ -33,7 +33,7 @@ S: is a numpy.ndarray of shape (k, d, d)
     pi = np.sum(g, axis=1) / n
 
     # update centroid means (m)
-    m = np.dot(g, X) / np.sum(g, axis=1, keepdims=True)
+    m = g @ X / np.sum(g, axis=1)[:, np.newaxis]
 
     # update covariance matrices (S)
     S = np.zeros((k, d, d))
