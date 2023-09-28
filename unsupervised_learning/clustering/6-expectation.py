@@ -37,11 +37,15 @@ l: is the likelihood"""
 
     # calc possibilities 4 each data point/cluster
     for i in range(k):
-        g[i] = pi[i] * pdf(X, m[i], S[i])
+        P = pdf(X, m[i], S[i])
+        if P is None:
+            return None, None
+        else:
+            g[i] = pi[i] * P
 
-    # calc total log
-    log = np.sum(np.log(np.sum(g, axis=0)))
-    # normalize
-    g /= np.sum(g, axis=0)
+    g_total = np.sum(g, axis=0)
+    g /= g_total
+
+    log = np.sum(np.log(g_total))
 
     return g, log
