@@ -14,6 +14,6 @@ clss:is a numpy.ndarray of shape (n,)
 containing the index of the cluster in C that
 each data point belongs to"""
 
-C, clss, x = sklearn.cluster.kmeans(X, k)
+    C, clss, x = sklearn.cluster.kmeans(X, k)
 
-return C, clss
+    return C, clss
