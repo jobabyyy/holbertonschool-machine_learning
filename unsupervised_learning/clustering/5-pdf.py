@@ -39,7 +39,7 @@ def pdf(X, m, S):
     # calc the difference between X and the mean m
     diff = X - m
 
-    # Calculate the PDF values for each data point
+    # Calculate the PDF values 4 each data point
     exponent = -0.5 * np.sum(np.dot(diff, inv_S) * diff, axis=1)
     P = (1.0 / ((2 * np.pi) ** (d / 2) * np.sqrt(det))) * np.exp(exponent)
 
