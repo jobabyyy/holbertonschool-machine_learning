@@ -21,7 +21,7 @@ def gmm(X, k):
     gmm_model = sklearn.mixture.GaussianMixture(k).fit(X)
     pi = gmm_model.weights_
     m = gmm_model.means_
-    S = gmm_model.covariance_
+    S = gmm_model.covariances_
     clss = gmm_model.predict(X)
     bic = gmm_model.bic(X)
 
