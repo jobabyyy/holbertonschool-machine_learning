@@ -13,7 +13,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     X: is a numpy.ndarray of shape (n, d)
        containing the data set
     kmin: is a positive integer containing the
-          minimum number of clusters to check 
+          minimum number of clusters to check
           for (inclusive)
     kmax: is a positive integer containing the
           maximum number of clusters to
@@ -30,7 +30,7 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     if not isinstance(X, np.ndarray) or len(X.shape) != 2:
         return None, None
     if kmax is None:
-        kmax = kmin + 1
+        return None, None
     if kmin <= 0 or kmin > kmax:
         return None, None
 
@@ -52,4 +52,3 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         d_vars.append(d_var)
 
     return results, d_vars
-
