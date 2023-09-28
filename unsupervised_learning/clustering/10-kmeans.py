@@ -14,6 +14,6 @@ def kmeans(X, k):
     containing the index of the cluster in C that
     each data point belongs to"""
 
-    C, clss, x = sklearn.cluster.kmeans(X, k)
+    C, clss, x = sklearn.cluster.k_means(X, k)
 
     return C, clss
