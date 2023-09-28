@@ -16,9 +16,9 @@ def variance(X, C):
     Returns: var, or None on failure.
     (var is total variance)"""
     if not isinstance(X, np.ndarray) or not isinstance(C, np.ndarray):
-        return None
+        return None, None
     if X.shape[1] != C.shape[1]:
-        return None
+        return None, None
     
     # calculate distance
     distance = np.sum((X[:, np.newaxis] - C) ** 2, axis=2)
