@@ -14,7 +14,7 @@ if __name__ == "__main__":
     X = np.concatenate((a, b, c, d, e), axis=0)
     np.random.shuffle(X)
 
-    results, d_vars = optimum_k(X, kmax=10)
+    results, d_vars = optimum_k(X,kmin=1, kmax=10)
     print(results)
     print(np.round(d_vars, 5))
     plt.scatter(list(range(1, 11)), d_vars)
