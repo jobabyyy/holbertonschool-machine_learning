@@ -27,6 +27,6 @@ Returns: a numpy.ndarray of shape (1, n) representing the
          probability of being in a specific state after t
          iterations, or None on failure"""
     for i in range(t):
-            s = np.dot(s, P)
+        s = np.dot(s, P)
 
     return s
