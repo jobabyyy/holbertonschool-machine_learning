@@ -36,9 +36,8 @@ def regular(P):
 
     steady_vec = eigenvecs / eigenvals.sum()
     steady_vec = steady_vec.real
+    results = [i.reshape(1, n) for i in np.dot(steady_vec.T,
+               P) if (i >= 0).all() and np.isclose(i.sum(), 1)]
 
-    for i in np.dot(steady_vec.T, P):
-        if (i >= 0).all() and np.isclose(i.sum(), 1):
-            return i.reshape(1, n)
 
-    return np.zero((1, n))
+    return np.zeros((1, n))
