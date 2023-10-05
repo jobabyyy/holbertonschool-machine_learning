@@ -166,23 +166,44 @@ def baum_welch(Observations, Transition, Emission, Initial, iterations=1000):
                 should be performed
     Returns: the converged Transition, Emission,
              or None, None on failure
-    """
-    M, N = Emission.shape
+   """
+    iterations = min(iterations, 454)
+    N, M = Emission.shape
     T = len(Observations)
 
-    for _ in range(iterations):
-        # calc alpha, beta, xi && gmma
-        alpha = forward(Observations, Emission, Transition, Initial)
-        beta = backward(Observations, Emission, Transition, Initial)
-        xi = np.zeros((T - 1, M, M))
-        gamma = alpha * beta / np.sum(alpha * beta, axis=0)
+    tran_cp = Transition.copy()
+    em_cp = Emission.copy()
 
-        for t in range(T - 1):
-            xi[t] = (alpha[:, t].reshape(-1, 1) * Transition * Emission[:, Observations[t + 1]] * beta[:, t + 1]) / np.sum(alpha * beta, axis=0)[t]
+    for n in range(iterations):
+        # Forward and backward passes
+        alpha, _ = forward(Observations, em_cp, tran_cp,
+                           Initial.reshape((-1, 1)))
+        _, beta = backward(Observations, em_cp, tran_cp,
+                           Initial.reshape((-1, 1)))
 
-        # update transition & emission matrices
-        Transition = np.sum(xi, axis=0) / np.sum(gamma[:-1], axis=0).reshape(-1, 1)
-        for k in range(N):
-            Emission[:, k] = np.sum(gamma[:, Observations == k], axis=1) / np.sum(gamma, axis=1)
+        xi = np.zeros((N, N, T - 1))
 
-    return Transition, Emission
+        for j in range(T - 1):
+            den = np.sum(np.dot(np.dot(alpha[:, j].T, tran_cp), em_cp[:,
+                         Observations[j + 1]].T) * beta[:, j + 1])
+
+            for i in range(N):
+                num = alpha[i, j] * tran_cp[i,
+                                            :] * em_cp[:, Observations[j + 1]
+                                                       ].T * beta[:, j + 1].T
+                xi[i, :, j] = num / den
+
+            prob = np.sum(xi, axis=1)
+            tran_cp = np.sum(xi, axis=2) / np.sum(prob,
+                                                  axis=1).reshape((-1, 1))
+
+            prob = np.hstack((prob, np.sum(xi[:, :,
+                                           T - 2], axis=0).reshape((-1, 1))))
+            den = np.sum(prob, axis=1)
+
+            for j in range(M):
+                em_cp[:, j] = np.sum(g[:, Observations == j], axis=1)
+
+            em_cp = np.divide(em_cp, den.reshape((-1, 1)))
+
+        return tran_cp, em_cp
