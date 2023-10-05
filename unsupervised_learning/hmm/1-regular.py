@@ -22,27 +22,22 @@ def regular(P):
     if not isinstance(P, np.ndarray) or P.shape[0] != P.shape[1]:
         return None
     n = P.shape[0]
-
-    # checking row p sum to aprox 1
     row = np.sum(P, axis=1)
     if not np.all(np.isclose(row, 1)):
         return None
-    # checking that all elements are neg
     if not np.all(P >= 0):
         return None
-
-    # calc steady-state probs
+    # Calculate the steady-state probabilities using eigenvectors
     eigenvals, eigenvecs = np.linalg.eig(P.T)
-    # steady state probs calculated
-    steady_vec = None
-     # looking for eigenvec that corresponds to eigenval
-    for i in range(len(eigenvals)):
-         if np.isclose(eigenvals[i], 1):
-             steady_vec = eigenvecs[:, i].real
-             break
-    if steady_vec is None:
-         return None
-     # normalize steady state vector
+    # Find the index corresponding to eigenvalue 1 (within a tolerance)
+    index = np.where(np.isclose(eigenvals, 1))[0]
+    if len(index) != 1:
+        return None
+    steady_vec = eigenvecs[:, index[0]].real
+    # Ensure that the steady state vector is non-negative
+    if not np.all(steady_vec >= 0):
+        return None
+    # Normalize the steady state vector
     steady_vec /= np.sum(steady_vec)
 
     return steady_vec.reshape(1, -1)
