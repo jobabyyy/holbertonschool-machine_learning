@@ -34,11 +34,15 @@ def regular(P):
     # calc steady-state probs
     eigenvals, eigenvecs = np.linalg.eig(P.T)
     # steady state probs calculated
-    steady_vec = eigenvals / eigenvecs.sum()
-    steady_vec = steady_vec.real
-    # checking for calculated steady state vecs
-    for i in np.dot(steady_vec.T, P):
-        if (i >= 0).all() and np.isclose(i.sum(), 1):
-            return None
-    
-    return i.reshape(1, n)
+    steady_vec = None
+     # looking for eigenvec that corresponds to eigenval
+    for i in range(len(eigenvals)):
+         if np.isclose(eigenvals[i], 1):
+             steady_vec = eigenvecs[:, i].real
+             break
+    if steady_vec is None:
+         return None
+     # normalize steady state vector
+    steady_vec /= np.sum(steady_vec)
+
+    return steady_vec.reshape(1, -1)
