@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+import numpy as np
 backward = __import__('5-backward').backward
 
 if __name__ == '__main__':

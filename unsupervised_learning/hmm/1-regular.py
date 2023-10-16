@@ -34,9 +34,7 @@ def regular(P):
     if len(index) != 1:
         return None
     steady_vec = eigenvecs[:, index[0]].real
-    # Ensure that the steady state vector is non-negative
-    if not np.all(steady_vec >= 0):
-        return None
+
     # Normalize the steady state vector
     steady_vec /= np.sum(steady_vec)
 

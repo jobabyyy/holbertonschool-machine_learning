@@ -3,9 +3,11 @@
 of the LeNet-5 architecture
 using Keras"""
 
+import tensorflow as tf
 
-import tensorflow.keras as K
-
+# Set the random seed for TensorFlow
+SEED = 0
+tf.random.set_seed(SEED)
 
 def lenet5(X):
     """building a modified version of LeNet-5"""
