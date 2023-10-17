@@ -51,7 +51,7 @@ class GaussianProcess:
 
         for i in range(m):
             for j in range(n):
-                distance = np.linalg.norm(X1[i] - X2[j])
-                K[i, j] = self.sigma_f ** np.exp(-0.5 * self.l ** 2)
+                d = np.linalg.norm(X1[i] - X2[j])
+                K[i, j] = self.sigma_f ** 2 * np.exp(-0.5 * (d / self.l) ** 2)
 
         return K
