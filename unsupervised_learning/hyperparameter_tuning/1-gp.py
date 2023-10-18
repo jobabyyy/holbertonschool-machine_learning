@@ -69,13 +69,10 @@ class GaussianProcess:
         sigma: is a numpy.ndarray of shape (s,) containing
                the variance for each point in X_s, respectively
         """
+        K_s = self.kernel(self.X, X_s)
+        K_ss = self.kernel(X_s, X_s)
         K_inv = np.linalg.inv(self.K)
-        k_star = self.kernel(self.X, X_s)
-        mean = np.dot(k_star.T, np.dot(K_inv, self.Y)).flatten()
-        K_var_M = self.kernel(X_s, X_s)
-        K_var_S = self.kernel(self.X, X_s)
-        sigma = np.diag(K_var_M - np.dot(K_var_S.T, np.dot(K_inv, K_var_S)))
-        std_dev = np.sqrt(sigma)
+        mean = K_s.T.dot(K_inv).dot(self.Y).reshape(-1)
+        sigma = np.diag(K_ss - K_s.T.dot(K_inv).dot(K_s))
 
-
-        return mean, std_dev
+        return mean, sigma
