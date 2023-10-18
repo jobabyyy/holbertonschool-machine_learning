@@ -72,8 +72,10 @@ class GaussianProcess:
         K_inv = np.linalg.inv(self.K)
         k_star = self.kernel(self.X, X_s)
         mean = np.dot(k_star.T, np.dot(K_inv, self.Y)).flatten()
-        variance = np.diag(self.kernel(X_s, X_s)
-                           ) - np.sum(k_star.T.dot(K_inv) * k_star.T, axis=1)
-        std_dev = np.sqrt(variance)
+        K_var_M = self.kernel(X_s, X_s)
+        K_var_S = self.kernel(self.X, X_s)
+        sigma = np.diag(K_var_M - np.dot(K_var_S.T, np.dot(K_inv, K_var_S)))
+        std_dev = np.sqrt(sigma)
+
 
         return mean, std_dev
