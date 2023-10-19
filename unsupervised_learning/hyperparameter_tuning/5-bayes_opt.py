@@ -41,15 +41,14 @@ class BayesianOptimization:
 
     def acquisition(self):
         """
-
-       Uses the Expected Improvement acquisition function
-       Returns: X_next, EI
-       X_next: is a numpy.ndarray of shape (1,) representing
+        Uses the Expected Improvement acquisition function
+        Returns: X_next, EI
+        X_next: is a numpy.ndarray of shape (1,) representing
                the next best sample point
-       EI: is a numpy.ndarray of shape (ac_samples,)
+        EI: is a numpy.ndarray of shape (ac_samples,)
            containing the expected improvement of each
            potential sample
-       """
+        """
         mu, sigma = self.gp.predict(self.X_s)
 
         if self.minimize:
