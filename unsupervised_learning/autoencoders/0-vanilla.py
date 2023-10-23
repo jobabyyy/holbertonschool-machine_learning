@@ -24,44 +24,33 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
              - auto: is the full autoencoder model
     """
     # Encoder
-    input_layer = keras.layers.Input(shape=(input_dims,))
-    encoder_layers = []
+    encoder_input = keras.Input(shape=(input_dims,))
 
-    for num_nodes in hidden_layers:
-        encoder_layers.append(keras.layers.Dense(num_nodes,
-                              activation='relu')(input_layer))
-        input_layer = encoder_layers[-1]
+    x = encoder_input
+    for layer_dims in hidden_layers:
+        x = keras.layers.Dense(layer_dims,
+                               activation='relu')(x)
+    encoder_output = keras.layers.Dense(latent_dims,
+                                        activation='relu')(x)
 
-    latent_layer = keras.layers.Dense(latent_dims,
-                                      activation='relu')(input_layer)
-    
-    # Dense layer to transform the encoder
-    transformed = keras.layers.Dense(hidden_layers[-1],
-                                     activation='relu')(latent_layer)
-    
-    # Encoder model with transformed output
-    encoder = keras.models.Model(inputs=input_layer,
-                                 outputs=transformed)
+    encoder = keras.Model(encoder_input, encoder_output)
 
     # Decoder
-    input_layer = keras.layers.Input(shape=(hidden_layers[-1],))
-    decoder_layers = []
-
-    for num_nodes in reversed(hidden_layers):
-        decoder_layers.append(keras.layers.Dense(num_nodes,
-                              activation='relu')(input_layer))
-        input_layer = decoder_layers[-1]
-
-    output_layer = keras.layers.Dense(input_dims,
-                                      activation='sigmoid')(input_layer)
-
-    decoder = keras.models.Model(inputs=input_layer, outputs=output_layer)
+    decoder_input = keras.Input(shape=(latent_dims,))
+    x = decoder_input
+    for layer_dims in reversed(hidden_layers):
+        x = keras.layers.Dense(layer_dims, activation='relu')(x)
+    decoder_output = keras.layers.Dense(input_dims,
+                                        activation='sigmoid')(x)
+    decoder = keras.Model(decoder_input, decoder_output)
 
     # Autoencoder
-    autoencoder = keras.models.Model(inputs=encoder.input,
-                                     outputs=decoder(encoder.output))
+    autoencoder_input = keras.Input(shape=(input_dims,))
+    encoded = encoder(autoencoder_input)
+    decoded = decoder(encoded)
+    autoencoder = keras.Model(autoencoder_input, decoded)
 
-    # Compile
+    # Compile Autoencoder
     autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder, decoder, autoencoder
