@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Autoencoder: Convolutional
-                Autoencoder """
+"""Autoencoder: Convolutional Autoencoder """
 
 
 import tensorflow.keras as keras
@@ -8,62 +7,36 @@ import tensorflow.keras as keras
 
 def autoencoder(input_dims, filters, latent_dims):
     """
-    input_dims: is a tuple of integers containing
-                the dimensions of the model input
+    input_dims: is a tuple of integers containing the
+                dimensions of the model input
     filters: is a list containing the number of filters
              for each convolutional layer in the encoder,
              respectively
-                - the filters should be reversed for the decoder
+            - the filters should be reversed for the decoder
     latent_dims: is a tuple of integers containing the
                  dimensions of the latent space representation
-    Each convolution in the encoder should use a kernel size of
-    (3, 3) with same padding and relu activation, followed by
-    max pooling of size (2, 2)
-    Each convolution in the decoder, except for the last two,
-    should use a filter size of (3, 3) with same padding and
-    relu activation, followed by upsampling of size (2, 2)
-            - The second to last convolution should instead
-              use valid padding
-            - The last convolution should have the same
-              number of filters as
-              the number of channels in input_dims with
-              sigmoid activation
-              and no upsampling
     Returns: encoder, decoder, auto
-                - encoder: is the encoder model
-                - decoder: is the decoder model
-                - auto: is the full autoencoder model
+             - encoder: is the encoder model
+             - decoder: is the decoder model
+             - auto: is the full autoencoder model
     """
-    # Input layer
+    # Encoder
     encoder_input = keras.layers.Input(shape=input_dims)
     x = encoder_input
 
-    # Convolutional layers
     for f in filters:
         x = keras.layers.Conv2D(f, (3, 3), activation='relu',
                                 padding='same')(x)
-        x = keras.layers.MaxPooling2D((2, 2), padding='same')(x)
-
-    # Shape
-    non_flat = keras.backend.int_shape(x)[1:]
-
-    # latent vector
-    x = keras.layers.Flatten()(x)
-    encoder_output = keras.layers.Dense(latent_dims[0] *
-                                        latent_dims[1] * latent_dims[2],
-                                        activation='relu')(x)
+        x = keras.layers.MaxPooling2D((2, 2),
+                                      padding='same')(x)
 
     # Encoder model
-    encoder = keras.models.Model(encoder_input, encoder_output)
+    encoder = keras.models.Model(encoder_input, x)
 
-    # Input layer
-    decoder_input = keras.layers.Input(shape=(latent_dims[0] *
-                                        latent_dims[1] * latent_dims[2],))
-    x = keras.layers.Dense(non_flat[0] * non_flat[1] * non_flat[2],
-                            activation='relu')(decoder_input)
-    x = keras.layers.Reshape(non_flat)(x)
+    # Decoder
+    decoder_input = keras.layers.Input(shape=latent_dims)
+    x = decoder_input
 
-    # Convolutional layers
     for f in reversed(filters[:-1]):
         x = keras.layers.Conv2D(f, (3, 3), activation='relu',
                                 padding='same')(x)
@@ -81,8 +54,30 @@ def autoencoder(input_dims, filters, latent_dims):
     # Decoder model
     decoder = keras.models.Model(decoder_input, decoder_output)
 
+    # Autoencoder
     autoencoder_output = decoder(encoder(encoder_input))
     auto = keras.models.Model(encoder_input, autoencoder_output)
+
+    # Compile
     auto.compile(optimizer='adam', loss='binary_crossentropy')
 
     return encoder, decoder, auto
+
+
+"""def print_model_summary(encoder, decoder, auto):
+    print("Encoder Model Summary:")
+    encoder.summary()
+    print("\nDecoder Model Summary:")
+    decoder.summary()
+    print("\nAutoencoder Model Summary:")
+    auto.summary()
+
+
+if __name__ == "__main__":
+    # Assuming the dimensions you previously mentioned
+    input_dims = (28, 28, 1)
+    filters = [16, 8, 8]
+    latent_dims = (4, 4, 8)
+
+    encoder, decoder, auto = autoencoder(input_dims, filters, latent_dims)
+    print_model_summary(encoder, decoder, auto)"""
