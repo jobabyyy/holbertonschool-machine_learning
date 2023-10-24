@@ -57,10 +57,10 @@ def autoencoder(input_dims, filters, latent_dims):
     encoder = keras.models.Model(encoder_input, encoder_output)
 
     # Input layer
-    input_shape = (latent_dims[0] * latent_dims[1] * latent_dims[2],)
-    decoder_input = keras.layers.Input(shape=input_shape)
-
-    x = keras.layers.Dense(input_shape)(decoder_input)
+    decoder_input = keras.layers.Input(shape=(latent_dims[0] *
+                                        latent_dims[1] * latent_dims[2],))
+    x = keras.layers.Dense(non_flat[0] * non_flat[1] * non_flat[2],
+                            activation='relu')(decoder_input)
     x = keras.layers.Reshape(non_flat)(x)
 
     # Convolutional layers
