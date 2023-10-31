@@ -39,7 +39,6 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
                                output_shape=(latent_dims,
                                              ))([mean_layer, log_var])
 
-    encoder = tf.keras.models.Model(inputs, [z, mean_layer, log_var])
 
     # Decoder
     decoder_inputs = tf.keras.layers.Input(shape=(latent_dims,))
