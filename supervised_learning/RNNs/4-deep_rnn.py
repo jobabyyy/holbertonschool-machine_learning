@@ -31,14 +31,18 @@ def deep_rnn(rnn_cells, X, h_0):
             - Y: is a numpy.ndarray containing
                  all of the outputs
     """
-    l = len(rnn_cells)
-    t, m, i = X.shape
-    i, x, h = h_0.shape
+    l = len(rnn_cells)  # num of layers
+    t, m, i = X.shape  # input dimensions
+    i, x, h = h_0.shape  # dimensions of hidden state
 
+    # array to store the hidden states
     H = np.zeros((t + 1, l, m, h))
     Y = np.zeros((t, m, rnn_cells[-1].by.shape[1]))
+
+    # init first hidden state
     H[0] = h_0
 
+    # init hidden state for the current timestep
     for step in range(t):
         h_prev = X[step]
         for layer in range(l):
@@ -47,6 +51,8 @@ def deep_rnn(rnn_cells, X, h_0):
                                          h_prev)
             H[step + 1, layer] = h_next
             h_prev = h_next
+
+        # store the output for current timestep
         Y[step] = y
 
     return H, Y
