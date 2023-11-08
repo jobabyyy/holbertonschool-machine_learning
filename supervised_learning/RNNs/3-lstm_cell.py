@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RNN: LSTM CELL. 
+"""RNN: LSTM CELL.
 """
 
 
