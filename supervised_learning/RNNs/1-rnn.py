@@ -44,12 +44,12 @@ def rnn(rnn_cell, X, h_0):
 
     for step in range(time_steps):
         # fwd prop init for current time step
-        current_time = X[step, :, :]
+        current_time = X[step, :]
         current_state, y_t = rnn_cell.forward(current_state,
                                               current_time)
 
-    # store the hidden state and the output
-    H_stored[step, :, :] = current_state
-    Y_stored[step, :, :] = y_t
+        # store the hidden state and the output
+        H_stored[step, :, :] = current_state
+        Y_stored[step, :, :] = y_t
 
     return H_stored, Y_stored
