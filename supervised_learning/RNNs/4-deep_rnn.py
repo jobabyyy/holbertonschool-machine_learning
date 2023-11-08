@@ -31,4 +31,22 @@ def deep_rnn(rnn_cells, X, h_0):
             - Y: is a numpy.ndarray containing
                  all of the outputs
     """
-    
+    l = len(rnn_cells)
+    t, m, i = X.shape
+    i, x, h = h_0.shape
+
+    H = np.zeros((t + 1, l, m, h))
+    Y = np.zeros((t, m, rnn_cells[-1].by.shape[1]))
+    H[0] = h_0
+
+    for step in range(t):
+        h_prev = X[step]
+        for layer in range(l):
+            rnn_cell = rnn_cells[layer]
+            h_next, y = rnn_cell.forward(H[step, layer],
+                                         h_prev)
+            H[step + 1, layer] = h_next
+            h_prev = h_next
+        Y[step] = y
+
+    return H, Y
