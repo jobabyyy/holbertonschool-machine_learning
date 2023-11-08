@@ -37,3 +37,48 @@ class LSTMCell():
         self.bo = np.zeros(shape=(1, h))
         self.Wy = np.random.normal(size=(h, o))
         self.by = np.zeros(shape=(1, o))
+
+    def forward(self, h_prev, c_prev, x_t):
+        """
+        x_t: is a numpy.ndarray of shape (m, i)
+             that contains the data input for the cell
+        m: is the batche size for the data
+        h_prev: is a numpy.ndarray of shape (m, h)
+                containing the previous hidden state
+        c_prev: is a numpy.ndarray of shape (m, h)
+                containing the previous cell state
+            - The output of the cell should use a
+              softmax activation function
+        Returns: h_next, c_next, y
+            - h_next is the next hidden state
+            - c_next is the next cell state
+            - y is the output of the cell
+        """
+        # concat previous hidden state and input data
+        concat = np.concatenate((h_prev, x_t), axis=1)
+
+        # calc the ft and apply sigmoid
+        ft = np.matmul(concat, self.Wf) + self.bf
+        ft = 1 / (1 + np.exp(-ft))
+
+        # calc the gv and apply sigmoid
+        ut = np.matmul(concat, self.Wu) + self.bu
+        ut = 1 / (1 + np.exp(-ut))
+
+        # calc the ct and apply sigmoid
+        ct = np.matmul(concat, self.Wc) + self.bc
+        ct = np.tanh(ct)
+
+        # calc the cell state
+        c_next = ft * c_prev + ut * ct
+
+        # calc the output gate values
+        ot = np.matmul(concat, self.Wo) + self.bo
+        ot = 1 / (1 + np.exp(-ot))
+
+        h_next = ot * np.tanh(c_next)
+
+        yt = np.matmul(h_next, self.Wy) + self.by
+        y = np.exp(yt) / np.sum(np.exp(yt), axis=1, keepdims=True)
+
+        return h_next, c_next, y
