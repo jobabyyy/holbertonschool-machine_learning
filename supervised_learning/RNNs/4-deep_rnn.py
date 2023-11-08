@@ -45,7 +45,7 @@ def deep_rnn(rnn_cells, X, h_0):
     # init hidden state for the current timestep
     for step in range(t):
         h_prev = X[step]
-        for layer in range(l):
+        for layer in range(layer):
             rnn_cell = rnn_cells[layer]
             h_next, y = rnn_cell.forward(H[step, layer],
                                          h_prev)
