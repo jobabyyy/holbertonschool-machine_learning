@@ -46,3 +46,23 @@ class RNNCell():
         self.bh = np.zeros((1, h)) # hidden
         self.Wy = np.random.randn(h, o) # output
         self.by = np.zeros((1, o))
+
+    def forward(self, h_prev, x_t):
+        """
+           fwd Propagation
+
+        Args:
+            h_prev (numpy.ndarray)
+            x_t
+            Returns: next hidden state
+        """
+        # concat previous hidden state and input data
+        input_data = np.concatenate((h_prev, x_t), axis=1)
+        # compute next hidden state
+        h_next = np.tanh(np.dot(input_data, self.Wh) + self.bh)
+        # compute the output
+        output = np.dot(h_next, self.Wy) + self.by
+        logits = np.exp(output)
+        x = logits / np.sum(logits, axis=1, keepdims=True)
+
+        return h_next, x
