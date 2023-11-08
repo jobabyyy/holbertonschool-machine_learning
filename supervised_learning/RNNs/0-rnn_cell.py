@@ -28,7 +28,7 @@ class RNNCell():
             - The weights will be used on the right side
               for matrix multiplication
             - The biases should be initialized as zeros
-                - public instance method 
+                - public instance method
                     def forward(self, h_prev, x_t):
                     that performs forward propagation
                     for one time step
@@ -42,9 +42,9 @@ class RNNCell():
             Returns: h_next, y
             h_next is the next hidden state
         """
-        self.Wh = np.random.randn(h + i, h) # input
-        self.bh = np.zeros((1, h)) # hidden
-        self.Wy = np.random.randn(h, o) # output
+        self.Wh = np.random.randn(h + i, h)  # input
+        self.bh = np.zeros((1, h))  # hidden
+        self.Wy = np.random.randn(h, o)  # output
         self.by = np.zeros((1, o))
 
     def forward(self, h_prev, x_t):
