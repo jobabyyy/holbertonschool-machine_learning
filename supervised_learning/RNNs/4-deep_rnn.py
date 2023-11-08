@@ -31,12 +31,12 @@ def deep_rnn(rnn_cells, X, h_0):
             - Y: is a numpy.ndarray containing
                  all of the outputs
     """
-    l = len(rnn_cells)  # num of layers
+    layers = len(rnn_cells)  # num of layers
     t, m, i = X.shape  # input dimensions
     i, x, h = h_0.shape  # dimensions of hidden state
 
     # array to store the hidden states
-    H = np.zeros((t + 1, l, m, h))
+    H = np.zeros((t + 1, layers, m, h))
     Y = np.zeros((t, m, rnn_cells[-1].by.shape[1]))
 
     # init first hidden state
