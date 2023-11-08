@@ -35,3 +35,18 @@ class BidirectionalCell():
         self.bhf = np.zeros((1, h))
         self.bhb = np.zeros((1, h))
         self.by = np.zeros((1, o))
+
+    def forward(self, h_prev, x_t):
+        """_summary_
+
+        x_t: is a numpy.ndarray of shape (m, i)
+             that contains the data input for the cell
+        m: is the batch size for the data
+        h_prev: is a numpy.ndarray of shape (m, h)
+                containing the previous hidden state
+        Returns: h_next -- the next hidden state
+        """
+        h_next = np.zeros(np.dot(x_t,
+                          self.Whb) + np.dot(h_prev, self.Whf))
+
+        return h_next
