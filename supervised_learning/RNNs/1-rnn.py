@@ -23,13 +23,13 @@ def rnn(rnn_cell, X, h_0):
         h_0: is the initial hidden state, given
              as a numpy.ndarray of shape (m, h)
         h: is the dimensionality of the hidden state
-        Returns: 
+        Returns:
                  H, Y
                  H - is a numpy.ndarray containing all
                    of the hidden states
                  Y - is a numpy.ndarray containing all
-                   of the outputs 
-    """  
+                   of the outputs
+    """
     # dimensions from input data
     time_steps, m, x = X.shape
     hidden_state = h_0.shape[1]
