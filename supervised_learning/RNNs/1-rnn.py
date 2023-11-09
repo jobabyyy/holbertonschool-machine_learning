@@ -31,7 +31,8 @@ def rnn(rnn_cell, X, h_0):
                    of the outputs
     """
     # dimensions from input data
-    time_steps, m, x = X.shape
+    time_steps = X.shape[0]
+    m = X.shape[1]
     hidden_state = h_0.shape[1]
     output = rnn_cell.Wy.shape[1]
 
@@ -49,7 +50,7 @@ def rnn(rnn_cell, X, h_0):
                                               current_time)
 
         # store the hidden state and the output
-        H_stored[step, :, :] = current_state
-        Y_stored[step, :, :] = y_t
+        H_stored[step + 1] = current_state
+        Y_stored[step] = y_t
 
     return H_stored, Y_stored
