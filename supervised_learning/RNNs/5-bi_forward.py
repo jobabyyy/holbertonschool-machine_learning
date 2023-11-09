@@ -31,13 +31,13 @@ class BidirectionalCell():
         """
         self.Whf = np.random.normal(size=(i + h, h))
         self.Whb = np.random.normal(size=(i + h, h))
-        self.Wy = np.random.normal(size=(h * 2, o))
+        self.Wy = np.random.normal(size=(h + h, o))
         self.bhf = np.zeros((1, h))
         self.bhb = np.zeros((1, h))
         self.by = np.zeros((1, o))
 
     def forward(self, h_prev, x_t):
-        """_summary_
+        """ forward prop
 
         x_t: is a numpy.ndarray of shape (m, i)
              that contains the data input for the cell
@@ -47,10 +47,6 @@ class BidirectionalCell():
         Returns: h_next -- the next hidden state
         """
         concat = np.concatenate((h_prev, x_t), axis=1)
-        h_next = np.tanh(np.dot(concat, self.Whf) + np.dot(concat,
-                         self.Whb) + self.bhf + self.bhb)
-        # scale the output to be within desired range
-        scaling_factor = 1.0
-        h_next = scaling_factor * h_next
+        h_next = np.tanh(np.dot(concat, self.Whf) + self.bhf)
 
         return h_next
