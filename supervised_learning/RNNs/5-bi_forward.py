@@ -46,7 +46,7 @@ class BidirectionalCell():
                 containing the previous hidden state
         Returns: h_next -- the next hidden state
         """
-        h_next = np.zeros(np.dot(x_t,
+        h_next = np.tahn(np.dot(x_t,
                           self.Whf) + np.dot(h_prev, self.Whb))
 
         return h_next
