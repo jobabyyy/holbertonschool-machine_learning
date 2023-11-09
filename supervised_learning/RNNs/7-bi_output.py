@@ -89,6 +89,10 @@ class BidirectionalCell():
         Returns:
             Y, the outputs
         """
+        def sigmoid(x):
+            return 1 / (1 + np.exp(-x))
+
         Y = np.dot(H, self.Wy) + self.by
+        Y = sigmoid(Y)
 
         return Y
