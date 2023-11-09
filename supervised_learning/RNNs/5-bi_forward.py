@@ -29,8 +29,8 @@ class BidirectionalCell():
             in the backward direction
         Wy and byare: for the outputs
         """
-        self.Whf = np.random.normal(size=(i, h, h))
-        self.Whb = np.random.normal(size=(i, h, h))
+        self.Whf = np.random.normal(size=(i, + h, h))
+        self.Whb = np.random.normal(size=(i, + h, h))
         self.Wy = np.random.normal(size=(h * 2, o))
         self.bhf = np.zeros((1, h))
         self.bhb = np.zeros((1, h))
