@@ -36,7 +36,7 @@ def rnn(rnn_cell, X, h_0):
     output = rnn_cell.Wy.shape[1]
 
     # init arrays to store hidden states & outputs
-    H_stored = np.zeros((time_steps, m, hidden_state))
+    H_stored = np.zeros((time_steps + 1, m, hidden_state))
     Y_stored = np.zeros((time_steps, m, output))
 
     # intit current hidden state
