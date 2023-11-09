@@ -49,5 +49,8 @@ class BidirectionalCell():
         concat = np.concatenate((h_prev, x_t), axis=1)
         h_next = np.tanh(np.dot(concat, self.Whf) + np.dot(concat,
                          self.Whb) + self.bhf + self.bhb)
+        # scale the output to be within desired range
+        scaling_factor = 1.0
+        h_next = scaling_factor * h_next
 
         return h_next
