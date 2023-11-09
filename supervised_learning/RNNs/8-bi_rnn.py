@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RNNs: Bidirectional 
+"""RNNs: Bidirectional
 """
 
 
@@ -9,7 +9,7 @@ import numpy as np
 def bi_rnn(bi_cell, X, h_0, h_t):
     """ Function that performs forward
         propagation for a bidirectional RNN.
-    
+
     Args:
         bi_cell: is an instance of BidirectinalCell
                  that will be used for the forward propagation
@@ -38,11 +38,11 @@ def bi_rnn(bi_cell, X, h_0, h_t):
 
     for step in range(t):
         H_f[step+1] = bi_cell.forward(H_f[step], X[step])
-        
+
     for step in range(t-1, -1, -1):
         H_b[step] = bi_cell.backward(H_b[step+1], X[step])
-        
+
     H = np.concatenate((H_f[1:], H_b[:-1]), axis=-1)
     Y = bi_cell.output(H)
-    
+
     return H, Y
