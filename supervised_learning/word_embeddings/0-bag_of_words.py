@@ -27,7 +27,7 @@ def bag_of_words(sentences, vocab=None):
             Feautures: list of the features
                        used for embeddings."""
 
-    # Convert sentences to lowercase
+    # convert sentences to lowercase
     sentences = [sentence.lower() for sentence in sentences]
 
     # Create vocabulary if not provided
