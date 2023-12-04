@@ -42,7 +42,7 @@ def bag_of_words(sentences, vocab=None):
     tokenized_sentences = [tokenize(sentence) for
                            sentence in sentences]
 
-    print(sentences)
+    #print(sentences)
 
     # Create vocabulary if not provided
     if vocab is None:
