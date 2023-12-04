@@ -27,12 +27,9 @@ def tf_idf(sentences, vocab=None):
     vectorizer = TfidfVectorizer(vocabulary=vocab)
 
     # convert sentences into TF-IDF embeddings
-    embeddings = vectorizer.fit_transform(sentences)
+    embeddings = vectorizer.fit_transform(sentences).toarray()
 
     # get list of features
     features = vectorizer.get_feature_names_out()
-
-    # convert matrix to a numpy array
-    embeddings = embeddings.toarray()
 
     return embeddings, features
