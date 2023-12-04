@@ -13,7 +13,7 @@ def tokenize(sentence):
     using regex."""
 
     sentence = sentence.lower()
-    words = re.findall(r'\b\w+\b', sentence)
+    words = re.findall(r'\b\w+(?:\'\w+)?\b', sentence)
     return words
 
 
