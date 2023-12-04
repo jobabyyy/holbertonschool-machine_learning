@@ -4,6 +4,17 @@ Bag of Words."""
 
 
 import numpy as np
+import re
+
+
+def tokenize(sentence):
+    """Using this function to normalize
+    by converting to lowercase and tokenize
+    using regex."""
+
+    sentence = sentence.lower()
+    words = re.findall(r'\b\w+\b', sentence)
+    return words
 
 
 def bag_of_words(sentences, vocab=None):
@@ -28,8 +39,10 @@ def bag_of_words(sentences, vocab=None):
                        used for embeddings."""
 
     # convert sentences to lowercase
-    tokenized_sentences = [sentence.lower().split()
-                           for sentence in sentences]
+    tokenized_sentences = [tokenize(sentence) for
+                           sentence in sentences]
+
+    print(sentences)
 
     # Create vocabulary if not provided
     if vocab is None:
