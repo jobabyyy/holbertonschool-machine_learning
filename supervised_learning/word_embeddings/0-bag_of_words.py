@@ -10,7 +10,7 @@ def bag_of_words(sentences, vocab=None):
     """Function: bag of words
     function is to create bag of words
     embedding matrix.
-    
+
     Args:
          Sentences: list of sentences
                     to analyze
