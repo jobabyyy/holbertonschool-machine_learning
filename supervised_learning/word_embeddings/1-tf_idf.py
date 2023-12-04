@@ -1,16 +1,36 @@
 #!/usr/bin/env python3
 
-tf_idf = __import__('1-tf_idf').tf_idf
 
-sentences = ["Holberton school is Awesome!",
-             "Machine learning is awesome",
-             "NLP is the future!",
-             "The children are our future",
-             "Our children's children are our grandchildren",
-             "The cake was not very good",
-             "No one said that the cake was not very good",
-             "Life is beautiful"]
-vocab = ["awesome", "learning", "children", "cake", "good", "none", "machine"]
-E, F = tf_idf(sentences, vocab)
-print(E)
-print(F)
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+def tf_idf(sentences, vocab=None):
+    """
+    Function that creates a TF-IDF embedding:
+    sentences: is a list of sentences to analyze
+    vocab: is a list of the vocabulary words to
+           use for the analysis
+
+    If None, all words within sentences should be used
+
+    Returns: 
+            embeddings, features
+            embeddings is a numpy.ndarray of shape (s, f)
+            containing the embeddings
+    s: is the number of sentences in sentences
+    f: is the number of features analyzed
+    features: is a list of the features used for embeddings
+    """
+    vectorizer = TfidfVectorizer(vocabulary=vocab)
+
+    # convert sentences into TF-IDF embeddings
+    embeddings = vectorizer.fit_transform(sentences)
+
+    # get list of features
+    features = vectorizer.get_feature_names_out()
+
+    # convert matrix to a numpy array
+    embeddings = embeddings.toarray()
+
+    return embeddings, features
