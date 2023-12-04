@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Model to Keras Embedding layer"""
 
 
 import numpy as np
@@ -22,8 +23,8 @@ def gensim_to_keras(model):
     embedding_layer = Embedding(
         input_dim=vocab_size,
         output_dim=embedding_size,
-        weights=[word_vectors.vectors],  # Initialize weights with Gensim model
-        input_length=1,  # Each word is represented by a single integer index
+        weights=[word_vectors.vectors],  # Init weights w/ Gensim model
+        input_length=1,  # Each word repped by a single integer index
         trainable=False,  # Make the weights non-trainable
     )
 
