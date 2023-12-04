@@ -46,11 +46,12 @@ def bag_of_words(sentences, vocab=None):
 
     # Create vocabulary if not provided
     if vocab is None:
+        excluded_words = {"is", "s"} 
         all_words = [word for sentence in tokenized_sentences
                      for word in sentence]  # flatten sentences
 
         vocab = sorted(set(word for word in
-                       all_words if not word.endswith('s')))
+                       all_words if word not in excluded_words))
 
     # initialize embeddings matrix
     num_sentences = len(tokenized_sentences)
