@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""NLP: Word Embedding
+TF-IDF"""
 
 
 import numpy as np
