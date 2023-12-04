@@ -46,7 +46,7 @@ def bag_of_words(sentences, vocab=None):
 
     # Create vocabulary if not provided
     if vocab is None:
-        excluded_words = {"s"} 
+        excluded_words = {"s"}
         all_words = [word for sentence in tokenized_sentences
                      for word in sentence]  # flatten sentences
 
