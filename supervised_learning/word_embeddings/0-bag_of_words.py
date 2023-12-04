@@ -13,7 +13,7 @@ def tokenize(sentence):
     using regex."""
 
     sentence = sentence.lower()
-    words = re.findall(r'\b\w+(?:\'\w+)?\b', sentence)
+    words = re.findall(r"\w+\b", sentence)
     return words
 
 
@@ -46,9 +46,11 @@ def bag_of_words(sentences, vocab=None):
 
     # Create vocabulary if not provided
     if vocab is None:
-        vocab = sorted(set(word for sentence in
-                       tokenized_sentences for word
-                       in sentence))
+        all_words = [word for sentence in tokenized_sentences
+                     for word in sentence]  # flatten sentences
+
+        vocab = sorted(set(word for word in
+                       all_words if not word.endswith('s')))
 
     # initialize embeddings matrix
     num_sentences = len(tokenized_sentences)
