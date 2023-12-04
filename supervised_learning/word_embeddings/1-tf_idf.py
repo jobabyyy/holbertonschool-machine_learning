@@ -16,7 +16,7 @@ def tf_idf(sentences, vocab=None):
 
     If None, all words within sentences should be used
 
-    Returns: 
+    Returns:
             embeddings, features
             embeddings is a numpy.ndarray of shape (s, f)
             containing the embeddings
@@ -30,6 +30,6 @@ def tf_idf(sentences, vocab=None):
     embeddings = vectorizer.fit_transform(sentences).toarray()
 
     # get list of features
-    features = vectorizer.get_feature_names_out()
+    features = vectorizer.get_feature_names()
 
     return embeddings, features
