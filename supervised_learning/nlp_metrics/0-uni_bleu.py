@@ -3,6 +3,9 @@
 Calculating Unigram BLEU Score."""
 
 
+import numpy as np
+
+
 def uni_bleu(references, sentence):
     """
     Function that calculates the unigram
@@ -19,23 +22,37 @@ def uni_bleu(references, sentence):
     Returns:
             the unigram BLEU score.
     """
-    # Calculate precision for each reference
-    precisions = []
-    sentence_words = set(sentence)
+    # initialize directories
+    word_counts = {}
+    max_ref_counts = {}
 
-    for ref in references:
-        common_words = sentence_words.intersection(ref)
-        precision = len(common_words) / len(sentence)
-        precisions.append(precision)
+    # max count of each word in references
+    for reference in references:
+        for word in reference:
+            current_count = reference.count(word)
+            max_ref_counts[word] = max(max_ref_counts.get(word, 0),
+                                       current_count)
 
-    # Calculate brevity penalty
-    close_l = min(references, key=lambda
-                  ref: abs(len(ref) - len(sentence)))
-    close_l = len(close_l)
-    brev_pen = 1 if len(sentence) >= close_l else len(sentence) / close_l
+    # count each word in the sentence
+    for word in sentence:
+        if word in max_ref_counts:
+            word_counts[word] = min(word_counts.get(word, 0) + 1,
+                                    max_ref_counts[word])
+    # calculate precision
+    precision = sum(word_counts.values()) / len(sentence)
+
+    # calculate length of closest reference to sentence
+    closest_ref = min(references, key=lambda
+                      ref: abs(len(ref) - len(sentence)))
+    closest_ref = len(closest_ref)
+
+    # Calculate brevity penalty to penalize overly short translations
+    if len(sentence) > closest_ref:
+        brev_penality = 1
+    else:
+        brev_penality = np.exp(1 - float(closest_ref) / len(sentence))
 
     # Calculate BLEU score
-    product = 1 if not precisions else (sum(precisions) / len(precisions))
-    bleu = brev_pen * product
+    bleu_score = brev_penality * precision
 
-    return bleu
+    return bleu_score
