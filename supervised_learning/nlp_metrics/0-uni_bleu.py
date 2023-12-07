@@ -3,7 +3,6 @@
 Calculating Unigram BLEU Score."""
 
 
-
 def uni_bleu(references, sentence):
     """
     Function that calculates the unigram
