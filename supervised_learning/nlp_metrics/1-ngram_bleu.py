@@ -43,4 +43,3 @@ def ngram_bleu(references, sentence, n):
     bleu = brev_penalty * precision
 
     return bleu
-
