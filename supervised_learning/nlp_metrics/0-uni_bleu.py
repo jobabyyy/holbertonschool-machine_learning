@@ -3,8 +3,6 @@
 Calculating Unigram BLEU Score."""
 
 
-from nltk.translate.bleu_score import sentence_bleu
-
 
 def uni_bleu(references, sentence):
     """
