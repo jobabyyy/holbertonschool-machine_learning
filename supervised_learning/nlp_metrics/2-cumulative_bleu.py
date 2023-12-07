@@ -25,6 +25,7 @@ def calculate_precision(candidate, references, n):
 
 
 def cumulative_bleu(references, sentence, n):
+    """Function cumulative bleu"""
     total_precision = 1.0
 
     for i in range(1, n + 1):
