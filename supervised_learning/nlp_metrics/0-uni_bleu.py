@@ -22,6 +22,23 @@ def uni_bleu(references, sentence):
     Returns:
             the unigram BLEU score.
     """
-    score = sentence_bleu(references, sentence)
+    # Calculate precision for each reference
+    precisions = []
+    sentence_words = set(sentence)
 
-    return (score)
+    for ref in references:
+        common_words = sentence_words.intersection(ref)
+        precision = len(common_words) / len(sentence)
+        precisions.append(precision)
+
+    # Calculate brevity penalty
+    close_l = min(references, key=lambda
+                  ref: abs(len(ref) - len(sentence)))
+    close_l = len(close_l)
+    brev_pen = 1 if len(sentence) >= close_l else len(sentence) / close_l
+
+    # Calculate BLEU score
+    product = 1 if not precisions else (sum(precisions) / len(precisions))
+    bleu = brev_pen * product
+
+    return bleu
