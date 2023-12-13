@@ -1,41 +1,34 @@
-#!/usr/bin/env python3
-"""Bleu Score: Cumulative N-Gram"""
-
-
 import numpy as np
 from collections import Counter
 
-
 def calculate_precision(candidate, references, n):
-    """
-    Precision calculation function
-    """
-    cand_ngrams = Counter(zip(*[candidate[i:] for i in range(n)]))
-    ref_ngrams = Counter()
+    candidate_ngrams = Counter(zip(*[candidate[i:] for i in range(n)]))
+    reference_ngrams = Counter()
 
     for ref in references:
-        ref_ngrams += Counter(zip(*[ref[i:] for i in range(n)]))
+        reference_ngrams += Counter(zip(*[ref[i:] for i in range(n)]))
 
-    clipped_counts = {ngram: min(cand_ngrams[ngram],
-                      ref_ngrams[ngram]) for ngram in cand_ngrams}
-    precision = sum(clipped_counts.values()
-                    ) / max(1, sum(cand_ngrams.values()))
+    clipped_counts = {ngram: min(candidate_ngrams[ngram], reference_ngrams[ngram]) for ngram in candidate_ngrams}
+    precision = sum(clipped_counts.values()) / max(1, sum(candidate_ngrams.values()))
 
     return precision
 
-
 def cumulative_bleu(references, sentence, n):
-    """Function cumulative bleu"""
     total_precision = 1.0
 
     for i in range(1, n + 1):
         precision_i = calculate_precision(sentence, references, i)
         total_precision *= precision_i
 
-    closest_ref = min(references, key=lambda
-                      ref: abs(len(ref) - len(sentence)))
-    brev_penalty = min(1, len(sentence) / len(closest_ref))
+    closest_ref_len = min(len(ref) for ref in references)
+    brevity_penalty = min(1, len(sentence) / closest_ref_len)
 
-    cumu_score = brev_penalty * total_precision ** (1/n)
+    cumulative_bleu_score = brevity_penalty * total_precision ** (1/n)
 
-    return cumu_score
+    return cumulative_bleu_score
+
+# Example usage:
+references = [["the", "cat", "is", "on", "the", "mat"], ["there", "is", "a", "cat", "on", "the", "mat"]]
+sentence = ["there", "is", "a", "cat", "here"]
+n = 2
+print(cumulative_bleu(references, sentence, n))
