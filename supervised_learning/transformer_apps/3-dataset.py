@@ -7,7 +7,7 @@ Task 3: Pipeline.
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import numpy as np
+
 
 
 class Dataset:
@@ -70,7 +70,7 @@ class Dataset:
         pt_tokens = [self.tokenizer_pt.vocab_size] + pt_tokens + [self.tokenizer_pt.vocab_size + 1]
         en_tokens = [self.tokenizer_en.vocab_size] + en_tokens + [self.tokenizer_en.vocab_size + 1]
 
-        return np.array(pt_tokens), np.array(en_tokens)
+        return pt_tokens, en_tokens
 
 if __name__ == '__main__':
   import tensorflow as tf

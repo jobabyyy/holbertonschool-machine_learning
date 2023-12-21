@@ -7,7 +7,6 @@ Taks 1: Encode Tokens
 
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import numpy as np
 
 
 
@@ -55,7 +54,7 @@ class Dataset:
             pt_tokens = [tokenizer_pt.vocab_size] + tokenizer_pt.encode(pt.numpy()) + [tokenizer_pt.vocab_size]
             en_tokens = [tokenizer_en.vocab_size] + tokenizer_en.encode(en.numpy()) + [tokenizer_en.vocab_size]
 
-            return np.array(pt_tokens), np.array(en_tokens)
+            return pt_tokens, en_tokens
 
         # apply encode function to each element of dataset
         data = data.map(encode, num_parallel_calls=tf.data.experimental.AUTOTUNE)
@@ -76,7 +75,7 @@ class Dataset:
         pt_tokens = [self.tokenizer_pt.vocab_size] + pt_tokens + [self.tokenizer_pt.vocab_size + 1]
         en_tokens = [self.tokenizer_en.vocab_size] + en_tokens + [self.tokenizer_en.vocab_size + 1]
 
-        return np.array(pt_tokens), np.array(en_tokens)
+        return pt_tokens, en_tokens
 
 # testing our output
 if __name__ == "__main__":
