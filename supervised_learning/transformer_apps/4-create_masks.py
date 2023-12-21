@@ -55,3 +55,4 @@ if __name__ == '__main__':
   data = Dataset(32, 40)
   for inputs, target in data.data_train.take(1):
       print(create_masks(inputs, target))
+      
