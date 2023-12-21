@@ -21,9 +21,8 @@ def question_answer(question, reference):
     or NONE if no answer is found.
     """
     # load pre-train model and tokenizer
-    model_name = (
-        "bert-large-uncased-whole-word-masking-finetuned-squad")
-    tokenizer = BertTokenizer.from_pretrained(model_name)
+    model_name = ()
+    tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking-finetuned-squad")
     model = TFAutoModelForQuestionAnswering.from_pretrained(model_name)
 
     # define function to perform question answering
