@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Q & A Bot: Question_Answer"""
+"""Q & A Bot: Question Answer"""
 
-import logging
+
 import tensorflow as tf
 import tensorflow_hub as hub
-from transformers import BertTokenizer, TFAutoModelForQuestionAnswering
+from transformers import BertTokenizer, TFBertForQuestionAnswering
 
-logging.getLogger('transformers').setLevel(logging.ERROR)
 
-def question_answer(question, reference):
+def question_answer(input_question, input_reference):
     """ function that finds a snippet of text
     within a reference doc to answer a question.
 
@@ -17,32 +16,52 @@ def question_answer(question, reference):
         reference (str): containing the reference
                          document from which to find
                          the answer
-    Returns: a string containing the answer 
+    Returns: a string containing the answer
     or NONE if no answer is found.
     """
-    # load pre-train model and tokenizer
-    model_name = ()
-    tokenizer = BertTokenizer.from_pretrained("bert-large-uncased-whole-word-masking-finetuned-squad")
-    model = TFAutoModelForQuestionAnswering.from_pretrained(model_name)
+    # Load pre-trained model and tokenizer
+    tokenizer = BertTokenizer.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
+    model = TFBertForQuestionAnswering.from_pretrained('bert-large-uncased-whole-word-masking-finetuned-squad')
 
-    # define function to perform question answering
-    input = tokenizer(question, reference, padding=True, return_tensors="tf")
-    output = model(**input)
+    # Tokenize input
+    question_tokens = tokenizer.tokenize(input_question)
+    reference_tokens = tokenizer.tokenize(input_reference)
 
-    # convert vars to numpy arrays
-    start_scores = output.start_logits
-    end_scores = output.end_logits
+    # Prepare tokens for the model
+    bert_tokens = ['[CLS]'] + question_tokens + ['[SEP]'] + reference_tokens + ['[SEP]']
+    input_ids = tokenizer.convert_tokens_to_ids(bert_tokens)
+    token_type_ids = [0] * (1 + len(question_tokens) + 1) + [1] * (len(reference_tokens) + 1)
+    attention_mask = [1] * len(input_ids)
 
-    # get answer span
-    start_answer = tf.argmax(start_scores, axis=1).numpy()[0]
-    end_answer = tf.argmax(end_scores, axis=1).numpy()[0] + 1
+    # Convert inputs to tensors
+    inputs = {
+        'input_ids': tf.convert_to_tensor([input_ids], dtype=tf.int32),
+        'token_type_ids': tf.convert_to_tensor([token_type_ids], dtype=tf.int32),
+        'attention_mask': tf.convert_to_tensor([attention_mask], dtype=tf.int32),
+    }
 
-    # convert predicted answer tokens to human readable string
-    answer_token = input["input_ids"].numpy()[0][start_answer:end_answer]
+    # Get model outputs
+    outputs = model(inputs)
+
+    # Get start and end of the answer
+    answer_start = tf.argmax(outputs.start_logits, axis=1).numpy()[0]
+    answer_end = tf.argmax(outputs.end_logits, axis=1).numpy()[0] + 1
+
+    # Get answer tokens and convert them to a string
+    answer_token = inputs['input_ids'].numpy()[0][answer_start: answer_end]
     answer = tokenizer.decode(answer_token)
 
-    # handle case of no answer, return None
+    # Handle the case of no answer, return None
     if not answer.strip():
         return None
 
     return answer
+
+if __name__ == "__main__":
+
+    file_path = ('/content/drive/MyDrive/ZendeskArticles/PeerLearningDays.md')
+    
+    with open(file_path, 'r') as f:
+      reference = f.read()
+
+    print(question_answer('When are PLDs?', reference))

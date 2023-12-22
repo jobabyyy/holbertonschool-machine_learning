@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Q & A Bot: Answer Questions"""
 
-
 from sentence_transformers import SentenceTransformer, util
 import os
 from nltk.tokenize import sent_tokenize
-
 
 def question_answer(corpus_path):
     """function that answers questions from multiple reference texts.
@@ -24,21 +22,20 @@ def question_answer(corpus_path):
         # Get the user's question
         question = input("Q: ")
 
-        # when the user says 'goodbye' or 'exit', exit script
+        # Check for exit conditions
         if question.lower() in ['goodbye', 'exit']:
             print("A: Goodbye")
-            exit()  # exits script
+            break  # Exit the loop and the script
 
-        # check for question in mapping
+        # Check for question in mapping
         if question.lower() in qa_map:
-            # print the answers from mapping
+            # Print the answers from mapping
             print("A:", qa_map[question.lower()])
         else:
             print("A: I'm sorry, I don't have an answer for that.")
 
-# pointing corpus path in the correct direction
-corpus_path = (
-    '/Users/jobabyyy/Desktop/ML T1/MachineLearningGH/holbertonschool-machine_learning/supervised_learning/qa_bot/ZendeskArticles')
+# Pointing corpus path in the correct direction
+corpus_path = '/content/drive/MyDrive/ZendeskArticles/PeerLearningDays.md'
 
-# initiate conversation responses:
+# Initiate conversation responses:
 question_answer(corpus_path)

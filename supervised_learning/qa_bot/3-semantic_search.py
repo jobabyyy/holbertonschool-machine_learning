@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Q & A Bot: Answer Questions"""
+"""Q & A Bot: Semantic Search"""
 
 
 from sentence_transformers import SentenceTransformer, util
@@ -50,8 +50,7 @@ def semantic_search(corpus_path, sentence):
     return most_similar_document
 
 # update the corpus_path variable to point to the correct directory
-corpus_path = (
-    '/Users/jobabyyy/Desktop/ML T1/MachineLearningGH/holbertonschool-machine_learning/supervised_learning/qa_bot/ZendeskArticles')
+corpus_path = ('/content/drive/MyDrive/ZendeskArticles')
 query_sentence = ""
 try:
     most_similar_document = semantic_search(corpus_path, query_sentence)
@@ -60,3 +59,16 @@ try:
 
 except ValueError as e:
     print("Error:", e)
+  
+if __name__ == "__main__":
+    # Update the corpus_path variable with the correct path
+    corpus_path = '/content/drive/MyDrive/ZendeskArticles'
+    
+    # Provide a valid query sentence
+    query_sentence = 'When are PLDs?'
+
+    try:
+        most_similar_document = semantic_search(corpus_path, query_sentence)
+        print(most_similar_document)
+    except ValueError as e:
+        print("Error:", e)
